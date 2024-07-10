@@ -1,5 +1,6 @@
 import React from "react";
 import SideNav from "./_components/SideNav";
+import NavBar from "./_components/NavBar";
 
 const AdminLayout = ({
   children,
@@ -7,9 +8,12 @@ const AdminLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
       <SideNav />
-      {children}
+      <div className="w-full">
+        <NavBar />
+        {children}
+      </div>
     </div>
   );
 };

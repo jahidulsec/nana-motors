@@ -9,9 +9,9 @@ import { usePathname } from "next/navigation";
 
 export default function SideNav() {
   return (
-    <aside className="bg-white w-[12rem] px-4 py-2 shadow-sm font-mono border-r border-secondary">
+    <aside className="bg-white w-[15rem] px-4 py-2 shadow-sm border-r border-secondary min-h-screen sticky">
       {/* logo */}
-      <div className="logo flex flex-col justify-center items-center">
+      <Link href={'/'} className="logo flex flex-col justify-center items-center cursor-pointer font-mono ">
         <div className="text-3xl text-primary flex gap-1">
           <Image
             src={Rickshaw}
@@ -25,10 +25,12 @@ export default function SideNav() {
         <h3 className="text-sm -mt-2 text-yellow-500 tracking-[0.385rem]">
           Motors
         </h3>
-      </div>
+      </Link>
+
+      <hr className="mt-5" />
 
       {/* navigations */}
-      <nav className="flex flex-col gap-3 my-8 text-primary">
+      <nav className="flex flex-col gap-3 my-10 text-primary">
         <SideNavItem
           title="Dashboard"
           href="/"
