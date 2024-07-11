@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 
 export default function SideNav() {
   return (
-    <aside className="bg-white w-[15rem] px-4 py-2 shadow-sm border-r border-secondary min-h-screen sticky">
+    <aside className="sticky top-0 h-full min-h-screen bg-white w-[15rem] px-4 py-2 shadow-sm border-r border-muted ">
       {/* logo */}
       <Link href={'/'} className="logo flex flex-col justify-center items-center cursor-pointer font-mono ">
         <div className="text-3xl text-primary flex gap-1">
