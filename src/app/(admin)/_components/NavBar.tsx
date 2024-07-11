@@ -5,7 +5,7 @@ import React from "react";
 
 const NavBar = () => {
   return (
-    <div className="sticky w-full bg-white py-3 px-5 flex justify-between items-center">
+    <div className="sticky top-0 z-10 w-full bg-white py-3 px-[2rem] flex justify-between items-center shadow-sm">
       <h4 className="text-lg font-semibold text-primary">Dashboard</h4>
 
       <div className="flex gap-5 justify-end items-center">

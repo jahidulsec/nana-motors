@@ -12,7 +12,9 @@ const AdminLayout = ({
       <SideNav />
       <div className="w-full">
         <NavBar />
-        {children}
+        <div className="container mt-2">
+          {children}
+        </div>
       </div>
     </div>
   );
