@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import Providers from "@/contexts/ProgressBarProvider";
 
 const fontSans = Poppins({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
