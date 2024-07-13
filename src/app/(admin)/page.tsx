@@ -1,10 +1,11 @@
 'use client'
 import React from "react";
 import { TaskTable } from "./_components/TaskTable";
+import Section from "@/components/Section";
 
 const DashboardHome = () => {
   return (
-    <section className="bg-white px-6 py-3 rounded-md mt-5 border border-muted">
+    <Section>
       {/* header */}
       <div className="header flex gap-5 justify-between items-center">
         <div>
@@ -37,7 +38,7 @@ const DashboardHome = () => {
       <div className="my-5">
         <TaskTable />
       </div>
-    </section>
+    </Section>
   );
 };
 
