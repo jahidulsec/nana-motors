@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
 import Tooltips from "@/components/Tooltips";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -15,12 +16,10 @@ import { vehicles } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/formatter";
 import { Edit, ShoppingCart, Trash } from "lucide-react";
 import React, { useState } from "react";
-
-
+import SellForm from "./SellForm";
 
 const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
-
-    const [sellVehicle, setSellVehicle] = useState<boolean | string>(false)
+  const [sellVehicle, setSellVehicle] = useState<any>(false);
 
   return (
     <>
@@ -31,7 +30,7 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
             <TableHead>Model</TableHead>
             <TableHead>Chasis no.</TableHead>
             <TableHead>Purchase Date</TableHead>
-            <TableHead>Price</TableHead>
+            <TableHead>Purchase Price</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -50,6 +49,7 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
                     size={"icon"}
                     variant={"outline"}
                     className="rounded-full size-8"
+                    onClick={() => setSellVehicle(item.id)}
                   >
                     <ShoppingCart className="size-4" />
                   </Button>
@@ -79,10 +79,17 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
         </TableBody>
       </Table>
 
-
-
       {/* sell car modal */}
-      
+      <Dialog open={sellVehicle} onOpenChange={setSellVehicle}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Sell Vehicle</DialogTitle>
+          </DialogHeader>
+          <SellForm id={sellVehicle} />
+        </DialogContent>
+      </Dialog>
+
+
     </>
   );
 };
