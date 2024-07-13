@@ -1,22 +1,13 @@
 import React, { Suspense } from "react";
 import Section from "@/components/Section";
-import { TaskTable } from "../_components/TaskTable";
-import { DateRangePicker } from "@/components/DateRangePicker";
-import { Button } from "@/components/ui/button";
-import { Plus, Send } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import VehicleTable from "./_components/VehicleTable";
 import { wait } from "@/lib/wait";
 import { vehicles } from "@/lib/data";
+import FilterSection from "./_components/FilterSection";
 
 const VehiclePage = () => {
+
+
   return (
     <Section>
       {/* header */}
@@ -40,28 +31,7 @@ const VehiclePage = () => {
       </div>
 
       {/* filtes */}
-      <div className="filters flex justify-between items-center gap-5 my-5">
-        <div className="filters flex gap-3 items-center">
-          <Input placeholder="Search by engine number" />
-
-          <Select>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="light">Sold</SelectItem>
-              <SelectItem value="dark">Available</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="buttons flex gap-3">
-          <Button size={"sm"}>
-            <Plus className="size-4 mr-2" />
-            <span>Add</span>
-          </Button>
-        </div>
-      </div>
+      <FilterSection />
 
       {/* data table of recent task */}
       <div className="my-5">
