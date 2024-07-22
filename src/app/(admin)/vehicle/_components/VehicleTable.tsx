@@ -38,7 +38,7 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
             <TableHead>Chasis no.</TableHead>
             <TableHead>Purchase Date</TableHead>
             <TableHead>Purchase Price</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="text-center">Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -51,7 +51,7 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
               <TableCell className="w-[150px]">{item.chesis_number}</TableCell>
               <TableCell>{formatDate(item.date)}</TableCell>
               <TableCell>{formatCurrency(item.price)}</TableCell>
-              <TableCell><VehicleTag tagName={item.status} /></TableCell>
+              <TableCell align="center"><VehicleTag tagName={item.status} /></TableCell>
               <TableCell className="flex gap-1 justify-end">
                 <Tooltips title="Sell Vehicle">
                   <Link href={`/vehicle/sell/${item.id}`}>

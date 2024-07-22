@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import PurchaseForm from "./PurchaseForm";
-import { useDebounce } from "@/app/hooks/useDebounce";
+import { useDebounce } from "@/hooks/useDebounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const FilterSection = () => {
