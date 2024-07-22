@@ -78,4 +78,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  svg {
+    min-width: fit-content;
+  }
 }
