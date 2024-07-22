@@ -11,7 +11,7 @@ const AdminLayout = ({
     <div className="min-h-screen flex relative">
       <SideNav />
       <div className="w-full">
-        {/* <NavBar /> */}
+        <NavBar />
         <div className="container mt-2">
           {children}
         </div>

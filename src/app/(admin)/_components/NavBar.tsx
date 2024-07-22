@@ -1,12 +1,21 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 const NavBar = () => {
+  const pathname = usePathname();
+
   return (
     <div className="sticky top-0 z-10 w-full bg-white py-3 px-[2rem] flex justify-between items-center shadow-sm">
-      <h4 className="text-lg font-semibold text-primary">Dashboard</h4>
+      <h4 className="text-lg font-semibold text-primary">
+        {pathname === '/' ? "DASHBOARD" : 
+        pathname.toUpperCase().split('/').slice(1,3).reverse().join(' ')
+        }
+      </h4>
 
       <div className="flex gap-5 justify-end items-center">
         {/* search bar */}

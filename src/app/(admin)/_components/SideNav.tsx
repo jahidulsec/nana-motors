@@ -77,7 +77,7 @@ export default function SideNav() {
         </div>
       </aside>
       <Button
-        className={`toggle absolute top-[1.125rem] transition-all duration-300 rounded-full size-6 ${
+        className={`toggle absolute z-20 top-[1.125rem] transition-all duration-300 rounded-full size-6 ${
           open ? "left-[12rem]" : "left-[3rem]"
         }`}
         variant={"outline"}
@@ -108,7 +108,7 @@ function SideNavItem({
   return (
     <Link
       href={href}
-      className={`flex gap-4 p-2 text-sm items-center rounded-md transition-all duration-500 hover:bg-primary hover:text-primary-foreground ${
+      className={`flex gap-5 p-2 text-sm items-center rounded-md transition-all duration-500 hover:bg-primary hover:text-primary-foreground ${
         pathname === href ? "text-primary-foreground bg-primary" : ""
       }`}
     >
