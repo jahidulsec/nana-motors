@@ -71,6 +71,10 @@
     @apply border-border;
   }
 
+  * {
+    font-family: 'Poppins';
+  }
+
   body {
     @apply bg-background text-foreground;
   }
