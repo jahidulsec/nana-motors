@@ -2,7 +2,7 @@ import React from "react";
 
 type VehicleTabProps = "in-stock" | "sold" | "in-emi";
 
-const VehicleTag = ({ tagName }: { tagName: VehicleTabProps }) => {
+const VehicleTag = ({ tagName }: { tagName: string }) => {
   return (
     <>
       {tagName === "in-stock" ? (

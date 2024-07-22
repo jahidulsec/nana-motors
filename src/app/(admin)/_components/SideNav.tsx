@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { ReactNode } from "react";
-import { BadgeDollarSign, LayoutDashboard, Car } from "lucide-react";
+import { BadgeDollarSign, LayoutDashboard, Car, LogOut } from "lucide-react";
 import Image from "next/image";
 import { Rickshaw } from "@/assets";
 import { usePathname } from "next/navigation";
@@ -11,8 +11,8 @@ export default function SideNav() {
   return (
     <aside className="sticky top-0 h-full min-h-screen bg-white w-[15rem] px-4 py-2 shadow-sm border-r border-muted ">
       {/* logo */}
-      <Link href={'/'} className="logo flex flex-col justify-center items-center cursor-pointer font-mono ">
-        <div className="text-3xl text-primary flex gap-1">
+      <Link href={'/'} className="logo flex flex-col pl-2 mt-5 cursor-pointer font-mono ">
+        <div className="text-3xl text-primary flex gap-4">
           <Image
             src={Rickshaw}
             width={20}
@@ -20,11 +20,8 @@ export default function SideNav() {
             className="object-contain"
             alt=""
           />
-          <h2>Nana</h2>
+          <h2 className="text-sm font-mono"><span className="font-semibold">NANA</span><span className="font-light">MOTORS</span></h2>
         </div>
-        <h3 className="text-sm -mt-2 text-yellow-500 tracking-[0.385rem]">
-          Motors
-        </h3>
       </Link>
 
       <hr className="mt-5" />
@@ -47,6 +44,8 @@ export default function SideNav() {
           icon={<BadgeDollarSign className="size-5" />}
         />
       </nav>
+
+      <SideNavItem title="Log out" href="" icon={<LogOut className="size-4" />} />
     </aside>
   );
 }

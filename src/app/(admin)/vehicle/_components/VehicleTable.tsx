@@ -21,12 +21,12 @@ import { vehicles } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/formatter";
 import { Edit, ShoppingCart, Trash } from "lucide-react";
 import React, { useState } from "react";
-import SellForm from "./SellForm";
 import Link from "next/link";
 import VehicleTag from "./VehicleTag";
+import PurchaseForm from "./PurchaseForm";
 
 const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
-  const [sellVehicle, setSellVehicle] = useState<any>(false);
+  const [editVehicle, setEditVehicle] = useState<any>(false);
 
   return (
     <>
@@ -70,6 +70,7 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
                     size={"icon"}
                     variant={"outline"}
                     className="rounded-full size-8"
+                    onClick={() => setEditVehicle(item)}
                   >
                     <Edit className="size-4" />
                   </Button>
@@ -90,12 +91,12 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
       </Table>
 
       {/* sell car modal */}
-      <Dialog open={sellVehicle} onOpenChange={setSellVehicle}>
+      <Dialog open={editVehicle} onOpenChange={setEditVehicle}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Sell Vehicle</DialogTitle>
+            <DialogTitle>Edit Vehicle</DialogTitle>
           </DialogHeader>
-          <SellForm id={sellVehicle} />
+          <PurchaseForm vehicle={editVehicle} />
         </DialogContent>
       </Dialog>
     </>

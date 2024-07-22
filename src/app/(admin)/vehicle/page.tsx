@@ -11,7 +11,7 @@ const VehiclePage = () => {
   return (
     <Section>
       {/* header */}
-      <div className="header flex gap-5 justify-between items-center">
+      <div className="header flex gap-5 justify-between items-center mb-8">
         <h2 className="text-2xl font-semibold text-primary mb-2">Vehicles</h2>
 
         {/* cards */}

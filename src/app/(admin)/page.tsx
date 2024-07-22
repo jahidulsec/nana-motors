@@ -8,7 +8,7 @@ const DashboardHome = () => {
     <Section>
       {/* header */}
       <div className="header flex gap-5 justify-between items-center">
-        <div>
+        <div className="mb-8">
           <h2 className="text-2xl font-semibold text-primary mb-2">
             Last tasks
           </h2>

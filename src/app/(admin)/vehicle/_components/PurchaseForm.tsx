@@ -2,9 +2,14 @@ import { Select } from "@/components/Select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { vehicles } from "@/lib/data";
 import React from "react";
 
-const PurchaseForm = () => {
+interface VehicleProps {
+  vehicle?: typeof vehicles[0]
+}
+
+const PurchaseForm = ({vehicle}: VehicleProps) => {
   return (
     <>
       <form action="" className="flex flex-col gap-5">
