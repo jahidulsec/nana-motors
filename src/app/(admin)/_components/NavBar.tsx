@@ -10,7 +10,7 @@ const NavBar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="sticky top-0 z-10 w-full bg-white py-3 px-[2rem] flex justify-between items-center shadow-sm">
+    <div className="sticky top-0 z-10 w-full bg-card border-b py-3 px-[2rem] flex justify-between items-center shadow-sm">
       <h4 className="text-lg font-semibold text-primary">
         {pathname === '/' ? "DASHBOARD" : 
         pathname.toUpperCase().split('/').slice(1,3).reverse().join(' ')

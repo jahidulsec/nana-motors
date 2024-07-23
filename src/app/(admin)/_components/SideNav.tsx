@@ -22,7 +22,7 @@ export default function SideNav() {
   return (
     <>
       <aside
-        className={`sticky top-0 h-full min-h-screen bg-white 
+        className={`sticky top-0 h-full min-h-screen bg-forground 
       px-3 py-2 shadow-sm border-r border-muted ${
         open ? "w-[15rem]" : "w-[3.75rem]"
       } overflow-hidden transition-all duration-300`}
@@ -77,7 +77,7 @@ export default function SideNav() {
         </div>
       </aside>
       <Button
-        className={`toggle absolute z-20 top-[1.125rem] transition-all duration-300 rounded-full size-6 ${
+        className={`toggle fixed z-20 top-[1.125rem] transition-all duration-300 rounded-full size-6 ${
           open ? "left-[12rem]" : "left-[3rem]"
         }`}
         variant={"outline"}

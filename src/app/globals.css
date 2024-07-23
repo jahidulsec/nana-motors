@@ -82,4 +82,8 @@
   svg {
     min-width: fit-content;
   }
+
+  .error-msg {
+    @apply text-[11px] text-red-500
+  }
 }
