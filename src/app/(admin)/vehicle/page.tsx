@@ -30,7 +30,9 @@ const VehiclePage = () => {
       </div>
 
       {/* filtes */}
-      <FilterSection />
+      <Suspense fallback={<p>Loading...</p>}>
+        <FilterSection />
+      </Suspense>
 
       {/* data table of recent task */}
       <div className="my-5">

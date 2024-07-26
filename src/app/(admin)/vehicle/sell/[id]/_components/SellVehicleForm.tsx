@@ -23,11 +23,11 @@ const SellVehicleForm = () => {
               <Input id="name" placeholder="Enter customer full name" />
             </p>
             <p>
-              <Label htmlFor="father_name">Father's Name</Label>
+              <Label htmlFor="father_name">Father&apos;s Name</Label>
               <Input id="father_name" placeholder="Enter father name" />
             </p>
             <p>
-              <Label htmlFor="mother_name">Mother's Name</Label>
+              <Label htmlFor="mother_name">Mother&apos;s Name</Label>
               <Input id="mother_name" placeholder="Enter mother name" />
             </p>
             <p>
