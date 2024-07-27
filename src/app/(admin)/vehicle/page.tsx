@@ -4,14 +4,13 @@ import VehicleTable from "./_components/VehicleTable";
 import { wait } from "@/lib/wait";
 import { vehicles } from "@/lib/data";
 import FilterSection from "./_components/FilterSection";
+import TableSkeleton from "@/components/TableSkeleton";
 
 const VehiclePage = () => {
-
-
   return (
     <Section>
       {/* header */}
-      <div className="header flex gap-5 justify-between items-center">
+      <div className="header flex gap-5 justify-between items-center mb-8">
         <h2 className="text-2xl font-semibold text-primary mb-2">Vehicles</h2>
 
         {/* cards */}
@@ -31,11 +30,13 @@ const VehiclePage = () => {
       </div>
 
       {/* filtes */}
-      <FilterSection />
+      <Suspense fallback={<p>Loading...</p>}>
+        <FilterSection />
+      </Suspense>
 
       {/* data table of recent task */}
       <div className="my-5">
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<TableSkeleton />}>
           <DataTable />
         </Suspense>
       </div>
@@ -43,21 +44,19 @@ const VehiclePage = () => {
   );
 };
 
+const DataTable = async () => {
+  const fetchData = async () => {
+    await wait();
+    return vehicles;
+  };
 
-const DataTable = async() => {
-
-  const fetchData = async() => {
-    await wait()
-    return vehicles
-  }
-
-  const data = await fetchData()
+  const data = await fetchData();
 
   return (
     <>
       <VehicleTable vehicle={data} />
     </>
-  )
-}
+  );
+};
 
 export default VehiclePage;

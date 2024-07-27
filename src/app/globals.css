@@ -71,7 +71,20 @@
     @apply border-border;
   }
 
+  * {
+    font-family: 'Inter';
+    font-feature-settings: "cv02","cv03","cv04","cv11";
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  svg {
+    min-width: fit-content;
+  }
+
+  .error-msg {
+    @apply text-[11px] text-red-500
   }
 }

@@ -2,7 +2,12 @@
 
 import Tooltips from "@/components/Tooltips";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -16,10 +21,12 @@ import { vehicles } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/formatter";
 import { Edit, ShoppingCart, Trash } from "lucide-react";
 import React, { useState } from "react";
-import SellForm from "./SellForm";
+import Link from "next/link";
+import VehicleTag from "./VehicleTag";
+import PurchaseForm from "./PurchaseForm";
 
 const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
-  const [sellVehicle, setSellVehicle] = useState<any>(false);
+  const [editVehicle, setEditVehicle] = useState<any>(false);
 
   return (
     <>
@@ -31,6 +38,7 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
             <TableHead>Chasis no.</TableHead>
             <TableHead>Purchase Date</TableHead>
             <TableHead>Purchase Price</TableHead>
+            <TableHead className="text-center">Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -43,16 +51,18 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
               <TableCell className="w-[150px]">{item.chesis_number}</TableCell>
               <TableCell>{formatDate(item.date)}</TableCell>
               <TableCell>{formatCurrency(item.price)}</TableCell>
+              <TableCell align="center"><VehicleTag tagName={item.status} /></TableCell>
               <TableCell className="flex gap-1 justify-end">
                 <Tooltips title="Sell Vehicle">
-                  <Button
-                    size={"icon"}
-                    variant={"outline"}
-                    className="rounded-full size-8"
-                    onClick={() => setSellVehicle(item.id)}
-                  >
-                    <ShoppingCart className="size-4" />
-                  </Button>
+                  <Link href={`/vehicle/sell/${item.id}`}>
+                    <Button
+                      size={"icon"}
+                      variant={"outline"}
+                      className="rounded-full size-8"
+                    >
+                      <ShoppingCart className="size-4" />
+                    </Button>
+                  </Link>
                 </Tooltips>
 
                 <Tooltips title="Edit">
@@ -60,6 +70,7 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
                     size={"icon"}
                     variant={"outline"}
                     className="rounded-full size-8"
+                    onClick={() => setEditVehicle(item)}
                   >
                     <Edit className="size-4" />
                   </Button>
@@ -80,16 +91,14 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
       </Table>
 
       {/* sell car modal */}
-      <Dialog open={sellVehicle} onOpenChange={setSellVehicle}>
+      <Dialog open={editVehicle} onOpenChange={setEditVehicle}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Sell Vehicle</DialogTitle>
+            <DialogTitle>Edit Vehicle</DialogTitle>
           </DialogHeader>
-          <SellForm id={sellVehicle} />
+          <PurchaseForm vehicle={editVehicle} />
         </DialogContent>
       </Dialog>
-
-
     </>
   );
 };

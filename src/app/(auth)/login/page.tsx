@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { adminLogin } from "../_actions/login";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, action] = useFormState(adminLogin, {});
 
   return (
     <>
@@ -20,28 +23,48 @@ const LoginPage = () => {
         </header>
 
         {/* form */}
-        <form action="" className="flex flex-col gap-5 my-8">
+        <form action={action} className="flex flex-col gap-5 my-8">
           <p>
             <Label className="text-primary" htmlFor="username">
               Username
             </Label>
             <Input type="text" name="username" id="username" />
+            {error?.username && <p className="error-msg">{error.username}</p>}
           </p>
 
           <p className="relative">
-            <Label className="text-primary" htmlFor="username">
+            <Label className="text-primary" htmlFor="password">
               Password
             </Label>
-            <Input type={!showPassword ? "password" : "text"} name="username" id="username" />
-            <div className="eye absolute top-9 right-3 cursor-pointer" onClick={() => {setShowPassword(!showPassword)}}>
+            <Input
+              type={!showPassword ? "password" : "text"}
+              name="password"
+              id="password"
+            />
+            <div
+              className="eye absolute top-9 right-3 cursor-pointer"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             </div>
+            {error?.password && <p className="error-msg">{error.password}</p>}
           </p>
 
-          <Button>Login</Button>
+          <SubmitButton />
         </form>
       </div>
     </>
+  );
+};
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? `Login...` : `Login`}
+    </Button>
   );
 };
 
