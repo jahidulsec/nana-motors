@@ -37,7 +37,7 @@ model Customer {
 
 model Vehicle {
   id            Int       @id @default(autoincrement())
-  engineNo      String
+  engineNo      String    @unique
   carCondition  String?   @default("new")
   sellerType    String?   @default("company")
   sellerName    String?
@@ -48,6 +48,8 @@ model Vehicle {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   Payment       Payment[]
+
+  @@index([engineNo, status])
 }
 
 model Payment {

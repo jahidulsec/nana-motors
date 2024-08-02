@@ -74,3 +74,9 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Customer_nid_key" ON "Customer"("nid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Vehicle_engineNo_key" ON "Vehicle"("engineNo");
+
+-- CreateIndex
+CREATE INDEX "Vehicle_engineNo_status_idx" ON "Vehicle"("engineNo", "status");

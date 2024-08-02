@@ -80,7 +80,7 @@ const FilterSection = () => {
           <DialogHeader>
             <DialogTitle>Add Vehicle</DialogTitle>
           </DialogHeader>
-          <PurchaseForm />
+          <PurchaseForm onClose={() => setPurchase(false)} />
         </DialogContent>
       </Dialog>
     </>
