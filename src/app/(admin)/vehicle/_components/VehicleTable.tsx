@@ -17,15 +17,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { vehicles } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/formatter";
-import { Edit, ShoppingCart, Trash } from "lucide-react";
+import { Edit, MessageSquareOff, ShoppingCart, Trash } from "lucide-react";
 import React, { useState } from "react";
 import Link from "next/link";
 import VehicleTag from "./VehicleTag";
 import PurchaseForm from "./PurchaseForm";
+import { Vehicle } from "@prisma/client";
+import ConditionTag from "./ConditionTag";
+import strict from "assert/strict";
 
-const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
+const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
   const [editVehicle, setEditVehicle] = useState<any>(false);
 
   return (
@@ -34,24 +36,28 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
         <TableHeader>
           <TableRow>
             <TableHead>Id</TableHead>
-            <TableHead>Model</TableHead>
-            <TableHead>Chasis no.</TableHead>
+            <TableHead>Engine No.</TableHead>
             <TableHead>Purchase Date</TableHead>
             <TableHead>Purchase Price</TableHead>
             <TableHead className="text-center">Status</TableHead>
+            <TableHead className="text-center">Condition</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {vehicle.map((item) => (
+          {vehicle.length > 0 ? vehicle.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.id}</TableCell>
-              <TableCell className="w-[120px]">{item.model}</TableCell>
-              <TableCell className="w-[150px]">{item.chesis_number}</TableCell>
-              <TableCell>{formatDate(item.date)}</TableCell>
-              <TableCell>{formatCurrency(item.price)}</TableCell>
-              <TableCell align="center"><VehicleTag tagName={item.status} /></TableCell>
+              <TableCell className="w-[150px]">{item.engineNo}</TableCell>
+              <TableCell>{formatDate(item.createdAt)}</TableCell>
+              <TableCell>{formatCurrency(item.purchasePrice)}</TableCell>
+              <TableCell align="center">
+                <VehicleTag tagName={item.status as string} />
+              </TableCell>
+              <TableCell align="center">
+                <ConditionTag tagName={item.carCondition as string} />
+              </TableCell>
               <TableCell className="flex gap-1 justify-end">
                 <Tooltips title="Sell Vehicle">
                   <Link href={`/vehicle/sell/${item.id}`}>
@@ -86,7 +92,10 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
                 </Tooltips>
               </TableCell>
             </TableRow>
-          ))}
+          )) : <TableCell colSpan={7} align="center" className="py-20 text-gray-400 pointer-events-none">
+            <MessageSquareOff className="size-10" />
+            <span className="text-[11px]">No data</span>
+            </TableCell>}
         </TableBody>
       </Table>
 
@@ -96,7 +105,12 @@ const VehicleTable = ({ vehicle }: { vehicle: typeof vehicles }) => {
           <DialogHeader>
             <DialogTitle>Edit Vehicle</DialogTitle>
           </DialogHeader>
-          <PurchaseForm vehicle={editVehicle} />
+          <PurchaseForm
+            vehicle={editVehicle}
+            onClose={() => {
+              setEditVehicle(false);
+            }}
+          />
         </DialogContent>
       </Dialog>
     </>

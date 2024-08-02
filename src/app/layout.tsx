@@ -3,21 +3,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Providers from "@/contexts/ProgressBarProvider";
+import { ToastContainer } from "react-toastify";
 
-
-// const fontSans = Poppins({
-//   subsets: ["latin"],
-//   variable: "--font-sans",
-//   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-// });
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "Nana Motors",
   description: "An account app",
 };
 
-// export const dynamic = "force-dynamic";
-
+export const dynamic = "force-dynamic";
 
 export default function RootLayout({
   children,
@@ -33,6 +28,7 @@ export default function RootLayout({
         )}
       >
         <Providers>{children}</Providers>
+        <ToastContainer />
       </body>
     </html>
   );

@@ -10,6 +10,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 // design database tables here
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model Customer {
+  id         Int       @id @default(autoincrement())
+  name       String
+  fatherName String?
+  motherName String?
+  spouseName String?
+  nid        String    @unique
+  mobile     Int
+  houseName  String?
+  village    String?
+  postOffice String?
+  upazilla   String?
+  district   String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Payment    Payment[]
+}
+
+model Vehicle {
+  id            Int       @id @default(autoincrement())
+  engineNo      String    @unique
+  carCondition  String?   @default("new")
+  sellerType    String?   @default("company")
+  sellerName    String?
+  sellerContact Int?
+  sellerAddress String?
+  purchasePrice Int
+  status        String    @default("available")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  Payment       Payment[]
+
+  @@index([engineNo, status])
+}
+
+model Payment {
+  id           Int      @id @default(autoincrement())
+  customerId   Int
+  vehicleId    Int
+  sellingPrice Int
+  vehicleType  String   @default("emi")
+  emiNo        Int
+  interestRate Int
+  emiDate      DateTime @default(now())
+
+  paidAmount Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Emi       Emi[]
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  vehicle  Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+}
+
+model Emi {
+  id               Int      @id @default(autoincrement())
+  paymentId        Int
+  paymentAmount    Int
+  interestAmount   Int
+  totalAmount      Int
+  paymentReference String
+  givenBy          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+}

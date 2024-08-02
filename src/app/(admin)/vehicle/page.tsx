@@ -5,6 +5,8 @@ import { wait } from "@/lib/wait";
 import { vehicles } from "@/lib/data";
 import FilterSection from "./_components/FilterSection";
 import TableSkeleton from "@/components/TableSkeleton";
+import db from "../../../../db/db";
+import { Vehicle } from "@prisma/client";
 
 const VehiclePage = () => {
   return (
@@ -45,16 +47,11 @@ const VehiclePage = () => {
 };
 
 const DataTable = async () => {
-  const fetchData = async () => {
-    await wait();
-    return vehicles;
-  };
-
-  const data = await fetchData();
+  const data =  await db.vehicle.findMany()
 
   return (
     <>
-      <VehicleTable vehicle={data} />
+      <VehicleTable vehicle={data as Vehicle[] } />
     </>
   );
 };

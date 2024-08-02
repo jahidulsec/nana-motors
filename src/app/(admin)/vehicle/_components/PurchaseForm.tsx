@@ -1,64 +1,122 @@
+"use client"
+
 import { Select } from "@/components/Select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { vehicles } from "@/lib/data";
-import React from "react";
+import React, { useEffect } from "react";
+import { useFormState, useFormStatus } from "react-dom";
+import { addVehicle } from "../../_actions/vehicle";
+import { Vehicle } from "@prisma/client";
+import { toast } from "react-toastify";
 
 interface VehicleProps {
-  vehicle?: typeof vehicles[0]
+  vehicle?: Vehicle;
+  onClose: () => void;
 }
 
-const PurchaseForm = ({vehicle}: VehicleProps) => {
+const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
+
+  const [data, action] = useFormState(addVehicle, null);
+
+  useEffect(() => {
+    if (data?.success != null) {
+      toast.success(data.success)
+      onClose()
+    } 
+  }, [data]);
+
   return (
     <>
-      <form action="" className="flex flex-col gap-5">
+      <form action={action} className="flex flex-col gap-5">
         <div className="grid grid-cols-2 gap-5">
           <p>
-            <Label htmlFor="engine_no">Engine No.</Label>
-            <Input id="engine_no" />
+            <Label htmlFor="engineNo">Engine No.</Label>
+            <Input id="engineNo" name="engineNo" />
+            {data?.error != null && data?.error.engineNo && (
+              <p className="error-msg">{data.error.engineNo}</p>
+            )}
           </p>
 
           <p>
-            <Label htmlFor="purchase_price">Purchase Price</Label>
-            <Input type="number" id="purchase_price" />
+            <Label htmlFor="purchasePrice">Purchase Price</Label>
+            <Input type="number" id="purchasePrice" name="purchasePrice" />
+            {data?.error != null && data?.error.purchasePrice && (
+              <p className="error-msg">{data.error.purchasePrice}</p>
+            )}
           </p>
 
           <p className="flex flex-col gap-1">
-            <Label htmlFor="car_type">Car Type</Label>
-            <Select id="car_type" className="bg-white" defaultValue={""}>
-              <option value="used">Used</option>
+            <Label htmlFor="carCondition">Car Type</Label>
+            <Select
+              id="carCondition"
+              name="carCondition"
+              className="bg-white"
+              defaultValue={""}
+            >
               <option value="new">New</option>
+              <option value="used">Used</option>
             </Select>
+            {data?.error != null && data?.error.carCondition && (
+              <p className="error-msg">{data.error.carCondition}</p>
+            )}
           </p>
 
           <p className="flex flex-col gap-1">
-            <Label htmlFor="seller_type">Seller Type</Label>
-            <Select id="seller_type" className="bg-white" defaultValue={""}>
-              <option value="used">Company</option>
-              <option value="new">User</option>
+            <Label htmlFor="sellerType">Seller Type</Label>
+            <Select
+              id="sellerType"
+              name="sellerType"
+              className="bg-white"
+              defaultValue={""}
+            >
+              <option value="company">Company</option>
+              <option value="user">User</option>
             </Select>
+            {data?.error != null && data?.error.sellerType && (
+              <p className="error-msg">{data.error.sellerType}</p>
+            )}
           </p>
 
           <p>
-            <Label htmlFor="seller_name">Seller Name</Label>
-            <Input type="text" id="seller_name" />
+            <Label htmlFor="sellerName">Seller Name</Label>
+            <Input type="text" id="sellerName" name="sellerName" />
+
+            {data?.error != null && data?.error.sellerName && (
+              <p className="error-msg">{data.error.sellerName}</p>
+            )}
           </p>
 
           <p>
-            <Label htmlFor="seller_contact">Seller Contact</Label>
-            <Input type="number" id="seller_contact" />
+            <Label htmlFor="sellerContact">Seller Contact</Label>
+            <Input type="number" id="sellerContact" name="sellerContact" />
+
+            {data?.error != null && data?.error.sellerContact && (
+              <p className="error-msg">{data.error.sellerContact}</p>
+            )}
           </p>
 
           <p>
-            <Label htmlFor="seller_address">Seller Address</Label>
-            <Input type="text" id="seller_address" />
+            <Label htmlFor="sellerAddress">Seller Address</Label>
+            <Input type="text" id="sellerAddress" name="sellerAddress" />
+            {data?.error != null && data?.error.sellerAddress && (
+              <p className="error-msg">{data.error.sellerAddress}</p>
+            )}
           </p>
         </div>
 
-        <Button className="self-start">Submit</Button>
+        <SubmitButton />
       </form>
     </>
+  );
+};
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? `Saving...` : `Save`}
+    </Button>
   );
 };
 

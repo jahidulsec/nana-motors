@@ -1,11 +1,10 @@
 import React from "react";
 
-type VehicleTabProps = "in-stock" | "sold" | "in-emi";
 
 const VehicleTag = ({ tagName }: { tagName: string }) => {
   return (
     <>
-      {tagName === "in-stock" ? (
+      {tagName === "available" ? (
         <span className="border border-teal-400 text-teal-950 py-0.5 px-4 text-[11px] font-medium rounded-full">In Stock</span>
       ) : tagName === "in-emi" ? (
         <span className="border border-yellow-400 text-yellow-950 py-0.5 px-4 text-[11px] font-medium rounded-full">In EMI</span>

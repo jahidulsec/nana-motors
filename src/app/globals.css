@@ -73,7 +73,7 @@
 
   * {
     font-family: 'Inter';
-    font-feature-settings: "cv02","cv03","cv04","cv11";
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   body {
@@ -85,6 +85,6 @@
   }
 
   .error-msg {
-    @apply text-[11px] text-red-500
+    @apply text-[11px] text-red-500 mt-0.5
   }
 }
