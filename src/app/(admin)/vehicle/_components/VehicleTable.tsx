@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 
 import { formatCurrency, formatDate } from "@/lib/formatter";
-import { Edit, ShoppingCart, Trash } from "lucide-react";
+import { Edit, MessageSquareOff, ShoppingCart, Trash } from "lucide-react";
 import React, { useState } from "react";
 import Link from "next/link";
 import VehicleTag from "./VehicleTag";
@@ -46,7 +46,7 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
         </TableHeader>
 
         <TableBody>
-          {vehicle.map((item) => (
+          {vehicle.length > 0 ? vehicle.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.id}</TableCell>
               <TableCell className="w-[150px]">{item.engineNo}</TableCell>
@@ -92,7 +92,10 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
                 </Tooltips>
               </TableCell>
             </TableRow>
-          ))}
+          )) : <TableCell colSpan={7} align="center" className="py-20 text-gray-400 pointer-events-none">
+            <MessageSquareOff className="size-10" />
+            <span className="text-[11px]">No data</span>
+            </TableCell>}
         </TableBody>
       </Table>
 

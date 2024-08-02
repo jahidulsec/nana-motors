@@ -23,7 +23,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
     if (data?.success != null) {
       toast.success(data.success)
       onClose()
-    }
+    } 
   }, [data]);
 
   return (

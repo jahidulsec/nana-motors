@@ -4,6 +4,7 @@ import { z } from "zod";
 import db from "../../../../db/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 
 const addSchema = z.object({
   engineNo: z.string().min(3),
@@ -19,18 +20,24 @@ export const addVehicle = async (prevState: unknown, formData: FormData) => {
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (result.success === false) {
-    return {error: result.error.formErrors.fieldErrors, success: null};
+    return { error: result.error.formErrors.fieldErrors, success: null };
   }
 
   const data = result.data;
 
-  await db.vehicle.create({data: {
-    ...data
-  }})
+  try {
+    await db.vehicle.create({
+      data: {
+        ...data,
+      },
+    });
 
-  // revalidate the cache
-  revalidatePath("/")
-  revalidatePath("/vehicle")
+    // revalidate the cache
+    revalidatePath("/");
+    revalidatePath("/vehicle");
 
-  return {error: null, success: 'Vehicle has been added'}
+    return { error: null, success: "Vehicle has been added" };
+  } catch (error) {
+    console.log(error)
+  }
 };
