@@ -1,13 +1,13 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "Customer" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "fatherName" TEXT,
     "motherName" TEXT,
@@ -25,18 +25,24 @@ CREATE TABLE "Customer" (
 
 -- CreateTable
 CREATE TABLE "Vehicle" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "engineNo" INTEGER NOT NULL,
-    "price" INTEGER NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "engineNo" TEXT NOT NULL,
+    "carCondition" TEXT DEFAULT 'new',
+    "sellerType" TEXT DEFAULT 'company',
+    "sellerName" TEXT,
+    "sellerContact" INTEGER,
+    "sellerAddress" TEXT,
+    "purchasePrice" INTEGER NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'available',
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "Payment" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "customerId" TEXT NOT NULL,
-    "vehicleId" TEXT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "customerId" INTEGER NOT NULL,
+    "vehicleId" INTEGER NOT NULL,
     "sellingPrice" INTEGER NOT NULL,
     "vehicleType" TEXT NOT NULL DEFAULT 'emi',
     "emiNo" INTEGER NOT NULL,
@@ -51,8 +57,8 @@ CREATE TABLE "Payment" (
 
 -- CreateTable
 CREATE TABLE "Emi" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "paymentId" TEXT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "paymentId" INTEGER NOT NULL,
     "paymentAmount" INTEGER NOT NULL,
     "interestAmount" INTEGER NOT NULL,
     "totalAmount" INTEGER NOT NULL,
