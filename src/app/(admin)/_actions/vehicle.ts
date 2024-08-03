@@ -50,7 +50,6 @@ export const addVehicle = async (prevState: unknown, formData: FormData) => {
   }
 };
 
-
 export const updateVehicle = async (
   id: number,
   prevState: unknown,
@@ -63,13 +62,13 @@ export const updateVehicle = async (
   }
 
   const data = result.data;
-  const vehicle = await db.vehicle.findUnique({where: {id: id}})
+  const vehicle = await db.vehicle.findUnique({ where: { id: id } });
 
-  if(vehicle == null) return notFound()
+  if (vehicle == null) return notFound();
 
   try {
     await db.vehicle.update({
-      where: {id: id},
+      where: { id: id },
       data: {
         ...data,
       },
@@ -91,4 +90,13 @@ export const updateVehicle = async (
       }
     }
   }
+};
+
+export const deleteVehicle = async (id: number) => {
+  const vehicle = await db.vehicle.delete({ where: { id } });
+
+  if (vehicle == null) return notFound();
+
+  revalidatePath("/");
+  revalidatePath("/vehicle");
 };
