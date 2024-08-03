@@ -30,7 +30,7 @@ CREATE TABLE "Vehicle" (
     "carCondition" TEXT DEFAULT 'new',
     "sellerType" TEXT DEFAULT 'company',
     "sellerName" TEXT,
-    "sellerContact" INTEGER,
+    "sellerContact" TEXT,
     "sellerAddress" TEXT,
     "purchasePrice" INTEGER NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'available',

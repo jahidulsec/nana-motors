@@ -11,7 +11,7 @@ const addSchema = z.object({
   carCondition: z.string().min(1),
   sellerType: z.string(),
   sellerName: z.string().nullable(),
-  sellerContact: z.coerce.number().nullable(),
+  sellerContact: z.string().nullable(),
   sellerAddress: z.string().nullable(),
   purchasePrice: z.coerce.number().int().min(1),
 });

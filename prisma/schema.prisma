@@ -41,7 +41,7 @@ model Vehicle {
   carCondition  String?   @default("new")
   sellerType    String?   @default("company")
   sellerName    String?
-  sellerContact Int?
+  sellerContact String?
   sellerAddress String?
   purchasePrice Int
   status        String    @default("available")

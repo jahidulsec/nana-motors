@@ -95,7 +95,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
 
           <p>
             <Label htmlFor="sellerContact">Seller Contact</Label>
-            <Input type="number" id="sellerContact" name="sellerContact" defaultValue={vehicle?.sellerContact || ""} />
+            <Input type="text" id="sellerContact" name="sellerContact" defaultValue={vehicle?.sellerContact || ""} />
 
             {data?.error != null && data?.error.sellerContact && (
               <p className="error-msg">{data.error.sellerContact}</p>
