@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Select } from "@/components/Select";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { addVehicle } from "../../_actions/vehicle";
+import { addVehicle, updateVehicle } from "../../_actions/vehicle";
 import { Vehicle } from "@prisma/client";
 import { toast } from "react-toastify";
 
@@ -16,14 +16,20 @@ interface VehicleProps {
 }
 
 const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
-
-  const [data, action] = useFormState(addVehicle, null);
+  const [data, action] = useFormState(
+    vehicle == null
+      ? addVehicle
+      : updateVehicle.bind(null, vehicle.id),
+    null,
+  );
 
   useEffect(() => {
     if (data?.success != null) {
-      toast.success(data.success)
-      onClose()
-    } 
+      toast.success(data.success);
+      onClose();
+    } else if (data?.db) {
+      toast.error(data.db);
+    }
   }, [data]);
 
   return (
@@ -32,7 +38,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
         <div className="grid grid-cols-2 gap-5">
           <p>
             <Label htmlFor="engineNo">Engine No.</Label>
-            <Input id="engineNo" name="engineNo" />
+            <Input id="engineNo" name="engineNo" defaultValue={vehicle?.engineNo || ""} />
             {data?.error != null && data?.error.engineNo && (
               <p className="error-msg">{data.error.engineNo}</p>
             )}
@@ -40,7 +46,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
 
           <p>
             <Label htmlFor="purchasePrice">Purchase Price</Label>
-            <Input type="number" id="purchasePrice" name="purchasePrice" />
+            <Input type="number" id="purchasePrice" name="purchasePrice" defaultValue={vehicle?.purchasePrice || ""} />
             {data?.error != null && data?.error.purchasePrice && (
               <p className="error-msg">{data.error.purchasePrice}</p>
             )}
@@ -52,7 +58,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
               id="carCondition"
               name="carCondition"
               className="bg-white"
-              defaultValue={""}
+              defaultValue={vehicle?.carCondition || ""}
             >
               <option value="new">New</option>
               <option value="used">Used</option>
@@ -68,7 +74,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
               id="sellerType"
               name="sellerType"
               className="bg-white"
-              defaultValue={""}
+              defaultValue={vehicle?.sellerType || ""}
             >
               <option value="company">Company</option>
               <option value="user">User</option>
@@ -80,7 +86,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
 
           <p>
             <Label htmlFor="sellerName">Seller Name</Label>
-            <Input type="text" id="sellerName" name="sellerName" />
+            <Input type="text" id="sellerName" name="sellerName" defaultValue={vehicle?.sellerName || ""} />
 
             {data?.error != null && data?.error.sellerName && (
               <p className="error-msg">{data.error.sellerName}</p>
@@ -89,7 +95,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
 
           <p>
             <Label htmlFor="sellerContact">Seller Contact</Label>
-            <Input type="number" id="sellerContact" name="sellerContact" />
+            <Input type="number" id="sellerContact" name="sellerContact" defaultValue={vehicle?.sellerContact || ""} />
 
             {data?.error != null && data?.error.sellerContact && (
               <p className="error-msg">{data.error.sellerContact}</p>
@@ -98,7 +104,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
 
           <p>
             <Label htmlFor="sellerAddress">Seller Address</Label>
-            <Input type="text" id="sellerAddress" name="sellerAddress" />
+            <Input type="text" id="sellerAddress" name="sellerAddress" defaultValue={vehicle?.sellerAddress || ""} />
             {data?.error != null && data?.error.sellerAddress && (
               <p className="error-msg">{data.error.sellerAddress}</p>
             )}
