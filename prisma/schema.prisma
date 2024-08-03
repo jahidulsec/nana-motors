@@ -44,7 +44,7 @@ model Vehicle {
   sellerContact String?
   sellerAddress String?
   purchasePrice Int
-  status        String    @default("available")
+  status        String    @default("available") // available, in-emi, sold
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   Payment       Payment[]
