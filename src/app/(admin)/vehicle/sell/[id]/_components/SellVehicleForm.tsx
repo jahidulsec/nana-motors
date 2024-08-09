@@ -7,16 +7,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Section from "@/components/Section";
 import { useDebounce } from "@/hooks/useDebounce";
-import db from "../../../../../../../db/db";
 import { Customer, Vehicle } from "@prisma/client";
+import { formatCurrency, formatDate } from "@/lib/formatter";
+import { useFormState, useFormStatus } from "react-dom";
+import { sellVehicle } from "@/app/(admin)/_actions/sell";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { DatePicker } from "@/components/DatePicker";
 
 const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
   const [nid, setNid] = useState<string>("");
+  const [date, setDate] = React.useState<Date>();
+
   const [customerData, setCustomerData] = useState<Customer>();
   const debonceValue = useDebounce(nid);
+  const router = useRouter();
+
+  const [data, action] = useFormState(sellVehicle, null);
 
   const handleCustomer = async () => {
-    // const data = await db.customer.findUnique({ where: { nid: nid } });
     const res = await fetch("/api/sell/" + nid);
     const data = await res.json();
     setCustomerData(data);
@@ -28,11 +37,20 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
     }
   }, [debonceValue]);
 
+  useEffect(() => {
+    if (data?.success != null) {
+      toast.success(data.success);
+      router.push("/vehicle");
+    } else if (data?.db) {
+      toast.error(data.db);
+    }
+  }, [data]);
+
   return (
     <>
       {/* form */}
       {/* customer form */}
-      <form>
+      <form action={action}>
         <Section className="pt-5 pb-8">
           <h3 className="text-primary font-semibold border-b border-secondary pb-2">
             Customer Information
@@ -43,6 +61,7 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
               <Label htmlFor="nid">National ID</Label>
               <Input
                 id="nid"
+                name="nid"
                 value={nid}
                 onChange={(e) => setNid(e.target.value)}
                 placeholder="ex. XXXXXXXXX"
@@ -58,58 +77,57 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
               <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
+                name="name"
                 defaultValue={customerData && customerData?.name}
                 placeholder="Enter customer full name"
               />
+              {data?.error && <p className="error-msg">{data.error.name}</p>}
             </p>
             <p>
               <Label htmlFor="fatherName">Father&apos;s Name</Label>
               <Input
                 id="fatherName"
+                name="fatherName"
                 defaultValue={(customerData && customerData.fatherName) || ""}
                 placeholder="Enter father name"
               />
+              {data?.error && (
+                <p className="error-msg">{data.error.fatherName}</p>
+              )}
             </p>
             <p>
               <Label htmlFor="motherName">Mother&apos;s Name</Label>
               <Input
                 id="motherName"
+                name="motherName"
                 defaultValue={(customerData && customerData.motherName) || ""}
                 placeholder="Enter mother name"
               />
+              {data?.error && (
+                <p className="error-msg">{data.error.motherName}</p>
+              )}
             </p>
             <p>
               <Label htmlFor="spouseName">Spouse Name</Label>
               <Input
                 id="spouseName"
+                name="spouseName"
                 defaultValue={(customerData && customerData.spouseName) || ""}
                 placeholder="Enter spouse name"
               />
+              {data?.error && (
+                <p className="error-msg">{data.error.spouseName}</p>
+              )}
             </p>
             <p>
               <Label htmlFor="mobile">Mobile</Label>
               <Input
-                type="text"
+                name="mobile"
                 id="mobile"
                 placeholder="ex. 01777 333444"
                 defaultValue={(customerData && customerData.mobile) || ""}
               />
-            </p>
-            <p>
-              <Label htmlFor="mobile_2">Mobile 2</Label>
-              <Input
-                type="text"
-                id="mobile_2"
-                placeholder="ex. 01777 333444 (optional)"
-              />
-            </p>
-            <p>
-              <Label htmlFor="mobile_3">Mobile 3</Label>
-              <Input
-                type="text"
-                id="mobile_3"
-                placeholder="ex. 01777 333444 (optional)"
-              />
+              {data?.error && <p className="error-msg">{data.error.mobile}</p>}
             </p>
           </div>
 
@@ -167,62 +185,103 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
               <Label htmlFor="engineNo">Vehicle No.</Label>
               <Input
                 id="engineNo"
-                defaultValue={vehicle && vehicle.engineNo}
+                name="engineNo"
+                value={vehicle && vehicle.engineNo}
                 placeholder="Enter vehicle number"
               />
+              {data?.error && (
+                <p className="error-msg">{data.error.engineNo}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="price">Price</Label>
+              <Label htmlFor="sellingPrice">Price</Label>
               <Input
                 type="number"
-                id="price"
+                id="sellingPrice"
+                name="sellingPrice"
                 placeholder={`Purchase price ${
-                  vehicle && vehicle.purchasePrice
+                  vehicle && formatCurrency(vehicle.purchasePrice)
                 }`}
               />
+              {data?.error && (
+                <p className="error-msg">{data.error.sellingPrice}</p>
+              )}
             </p>
             <p className="flex flex-col gap-1">
-              <Label htmlFor="payment_type">Payment Type</Label>
-              <Select id="payment_type" className="bg-white" defaultValue={""}>
+              <Label htmlFor="vehicleType">Payment Type</Label>
+              <Select
+                id="vehicleType"
+                name="vehicleType"
+                className="bg-white"
+                defaultValue={""}
+              >
                 <option value="">Select Type</option>
                 <option value="emi">EMI</option>
-                <option value="full_payment">Full Payment</option>
+                <option value="full-payment">Full Payment</option>
               </Select>
+              {data?.error && (
+                <p className="error-msg">{data.error.vehicleType}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="paid_amount">Paid Amount</Label>
+              <Label htmlFor="paidAmount">Paid Amount</Label>
               <Input
                 type="number"
-                id="paid_amount"
+                id="paidAmount"
+                name="paidAmount"
                 placeholder="Enter paid amount"
               />
+              {data?.error && (
+                <p className="error-msg">{data.error.paidAmount}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="no_emi">No of EMI</Label>
+              <Label htmlFor="emiNo">No of EMI</Label>
               <Input
                 type="number"
-                id="no_emi"
+                id="emiNo"
+                name="emiNo"
                 placeholder="Enter the number of total month of EMI"
               />
+              {data?.error && <p className="error-msg">{data.error.emiNo}</p>}
             </p>
-            <p>
-              <Label htmlFor="no_emi_month">EMI Date</Label>
-              <Input type="date" id="no_emi_month" />
+            <p className="">
+              <Label htmlFor="emiDate">EMI Date</Label>
+              {/* <DatePicker date={date} setDate={setDate} /> */}
+              <Input
+                type="date"
+                id="emiDate"
+                name="emiDate"
+              />
+              {data?.error && <p className="error-msg">{data.error.emiDate}</p>}
             </p>
 
             <p>
-              <Label htmlFor="interest_rate">Interest Rate (per Lac)</Label>
+              <Label htmlFor="interestRate">Interest Rate (per Lac)</Label>
               <Input
                 type="number"
-                id="interest_rate"
+                id="interestRate"
+                name="interestRate"
                 placeholder="Enter per month interest per lac"
               />
+              {data?.error && (
+                <p className="error-msg">{data.error.interestRate}</p>
+              )}
             </p>
           </div>
-          <Button size={"sm"}>Submit</Button>
+          <SubmitButton />
         </Section>
       </form>
     </>
+  );
+};
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? `Submitting...` : `Submit`}
+    </Button>
   );
 };
 

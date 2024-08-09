@@ -38,8 +38,8 @@ model Customer {
 model Vehicle {
   id            Int       @id @default(autoincrement())
   engineNo      String    @unique
-  carCondition  String?   @default("new")
-  sellerType    String?   @default("company")
+  carCondition  String?   @default("new") // old, new
+  sellerType    String?   @default("company") // company, user
   sellerName    String?
   sellerContact String?
   sellerAddress String?
@@ -57,10 +57,10 @@ model Payment {
   customerId   Int
   vehicleId    Int
   sellingPrice Int
-  vehicleType  String   @default("emi")
-  emiNo        Int
-  interestRate Int
-  emiDate      DateTime @default(now())
+  vehicleType  String   @default("emi") // emi, full-payment
+  emiNo        Int?
+  interestRate Int?
+  emiDate      DateTime? @default(now())
 
   paidAmount Int
 
