@@ -24,7 +24,7 @@ model Customer {
   motherName String?
   spouseName String?
   nid        String    @unique
-  mobile     Int
+  mobile     String
   houseName  String?
   village    String?
   postOffice String?
