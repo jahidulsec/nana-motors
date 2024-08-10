@@ -7,23 +7,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Section from "@/components/Section";
 import { useDebounce } from "@/hooks/useDebounce";
-import { Customer, Vehicle } from "@prisma/client";
-import { formatCurrency, formatDate } from "@/lib/formatter";
+import { Customer, Payment, Vehicle } from "@prisma/client";
+import { formatCurrency } from "@/lib/formatter";
 import { useFormState, useFormStatus } from "react-dom";
-import { sellVehicle } from "@/app/(admin)/_actions/sell";
+import { sellVehicle, updateSellVehicle } from "@/app/(admin)/_actions/sell";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { DatePicker } from "@/components/DatePicker";
+import { format } from "date-fns";
 
-const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
-  const [nid, setNid] = useState<string>("");
-  const [date, setDate] = React.useState<Date>();
 
-  const [customerData, setCustomerData] = useState<Customer>();
+const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any }) => {
+  const [nid, setNid] = useState<string>(payment != null ? payment.customer.nid : '');
+
+  const [customerData, setCustomerData] = useState<Customer>(payment != null && payment?.customer);
   const debonceValue = useDebounce(nid);
   const router = useRouter();
 
-  const [data, action] = useFormState(sellVehicle, null);
+  const [data, action] = useFormState(payment == null ? sellVehicle : updateSellVehicle.bind(null, payment.id), null);
 
   const handleCustomer = async () => {
     const res = await fetch("/api/sell/" + nid);
@@ -199,6 +199,7 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
                 type="number"
                 id="sellingPrice"
                 name="sellingPrice"
+                defaultValue={payment != null && payment.sellingPrice}
                 placeholder={`Purchase price ${
                   vehicle && formatCurrency(vehicle.purchasePrice)
                 }`}
@@ -213,7 +214,7 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
                 id="vehicleType"
                 name="vehicleType"
                 className="bg-white"
-                defaultValue={""}
+                value={payment != null && payment.vehicleType}
               >
                 <option value="">Select Type</option>
                 <option value="emi">EMI</option>
@@ -230,6 +231,7 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
                 id="paidAmount"
                 name="paidAmount"
                 placeholder="Enter paid amount"
+                defaultValue={payment != null && payment.paidAmount}
               />
               {data?.error && (
                 <p className="error-msg">{data.error.paidAmount}</p>
@@ -241,6 +243,7 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
                 type="number"
                 id="emiNo"
                 name="emiNo"
+                defaultValue={payment != null && payment.emiNo}
                 placeholder="Enter the number of total month of EMI"
               />
               {data?.error && <p className="error-msg">{data.error.emiNo}</p>}
@@ -252,6 +255,7 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
                 type="date"
                 id="emiDate"
                 name="emiDate"
+                value={payment != null ? format(payment.emiDate, 'yyyy-MM-dd') : ''}
               />
               {data?.error && <p className="error-msg">{data.error.emiDate}</p>}
             </p>
@@ -262,6 +266,7 @@ const SellVehicleForm = ({ vehicle }: { vehicle: Vehicle }) => {
                 type="number"
                 id="interestRate"
                 name="interestRate"
+                value={payment != null ? payment.interestRate : ''}
                 placeholder="Enter per month interest per lac"
               />
               {data?.error && (

@@ -38,8 +38,6 @@ import {
 import { deleteVehicle } from "../../_actions/vehicle";
 import { toast } from "react-toastify";
 
-
-
 const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
   const [editVehicle, setEditVehicle] = useState<any>(false);
   const [delVehicle, setDelVehicle] = useState<any>();
@@ -156,7 +154,7 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
               onClick={() => {
                 startTransition(async () => {
                   await deleteVehicle(delVehicle);
-                  toast.success('Vehicle has been deleted')
+                  toast.success("Vehicle has been deleted");
                 });
               }}
             >

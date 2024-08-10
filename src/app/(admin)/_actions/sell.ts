@@ -4,6 +4,7 @@ import { z } from "zod";
 import db from "../../../../db/db";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 
 const addSchema = z.object({
   engineNo: z.string().optional(),
@@ -43,6 +44,10 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       where: { engineNo: data.engineNo },
     });
 
+    if(vehicle != null &&vehicle?.status !== 'available') {
+      return { error: null, success: null, db: 'Vehicle is already sold' };
+    }
+
     if (user == null && vehicle != null) {
       const customer = await db.customer.create({
         data: {
@@ -66,7 +71,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,
           interestRate: data.interestRate,
-          emiDate: new Date(data.emiDate || ''),
+          emiDate: new Date(data.emiDate || ""),
           paidAmount: data.paidAmount,
           customerId: customer.id,
         },
@@ -79,7 +84,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,
           interestRate: data.interestRate,
-          emiDate: new Date(data.emiDate || ''),
+          emiDate: new Date(data.emiDate || ""),
           paidAmount: data.paidAmount,
           customerId: user.id,
         },
@@ -98,7 +103,73 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
 
     return { error: null, success: "Vehicle is successfully selled" };
   } catch (error) {
-    console.log(error)
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return {
+          error: null,
+          success: null,
+          db: "NID is already exist",
+        };
+      }
+    }
+  }
+};
+
+export const updateSellVehicle = async (
+  id: number,
+  prevState: unknown,
+  formData: FormData,
+) => {
+  const result = addSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (result.success === false) {
+    return { error: result.error.formErrors.fieldErrors, success: null };
+  }
+
+  const data = result.data;
+  const sellVehicle = await db.payment.findFirst({ where: { id: id } });
+
+  if (sellVehicle == null) return notFound();
+
+  try {
+    const customer = await db.customer.update({
+      where: { id: sellVehicle.customerId },
+      data: {
+        name: data.name,
+        fatherName: data.fatherName,
+        mobile: data.mobile,
+        motherName: data.motherName,
+        spouseName: data.spouseName,
+        nid: data.nid,
+        houseName: data.houseName,
+        village: data.village,
+        postOffice: data.postOffice,
+        upazilla: data.upazilla,
+        district: data.district,
+      },
+    });
+    await db.payment.update({
+      where: { id: id },
+      data: {
+        sellingPrice: data.sellingPrice,
+        vehicleType: data.vehicleType,
+        emiNo: data.emiNo,
+        interestRate: data.interestRate,
+        emiDate: new Date(data.emiDate || ""),
+        paidAmount: data.paidAmount,
+        customerId: customer.id,
+      },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/vehicle");
+    revalidatePath("/payment");
+
+    return {
+      error: null,
+      success: "Vehicle sell info is successfully updated",
+    };
+  } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return {
