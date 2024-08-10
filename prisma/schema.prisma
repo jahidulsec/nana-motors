@@ -24,7 +24,7 @@ model Customer {
   motherName String?
   spouseName String?
   nid        String    @unique
-  mobile     Int
+  mobile     String
   houseName  String?
   village    String?
   postOffice String?
@@ -38,13 +38,13 @@ model Customer {
 model Vehicle {
   id            Int       @id @default(autoincrement())
   engineNo      String    @unique
-  carCondition  String?   @default("new")
-  sellerType    String?   @default("company")
+  carCondition  String?   @default("new") // old, new
+  sellerType    String?   @default("company") // company, user
   sellerName    String?
-  sellerContact Int?
+  sellerContact String?
   sellerAddress String?
   purchasePrice Int
-  status        String    @default("available")
+  status        String    @default("available") // available, in-emi, sold
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   Payment       Payment[]
@@ -57,10 +57,10 @@ model Payment {
   customerId   Int
   vehicleId    Int
   sellingPrice Int
-  vehicleType  String   @default("emi")
-  emiNo        Int
-  interestRate Int
-  emiDate      DateTime @default(now())
+  vehicleType  String   @default("emi") // emi, full-payment
+  emiNo        Int?
+  interestRate Int?
+  emiDate      DateTime? @default(now())
 
   paidAmount Int
 

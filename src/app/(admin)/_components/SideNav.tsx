@@ -32,7 +32,7 @@ export default function SideNav() {
           href={"/"}
           className="logo flex flex-col pl-2 mt-5 cursor-pointer font-mono "
         >
-          <div className="text-3xl text-primary flex gap-4">
+          <div className="text-3xl text-primary flex gap-5">
             <Image
               src={Rickshaw}
               width={20}

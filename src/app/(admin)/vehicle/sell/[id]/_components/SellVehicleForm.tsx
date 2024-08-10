@@ -1,77 +1,176 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Select } from "@/components/Select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Section from "@/components/Section";
+import { useDebounce } from "@/hooks/useDebounce";
+import { Customer, Payment, Vehicle } from "@prisma/client";
+import { formatCurrency } from "@/lib/formatter";
+import { useFormState, useFormStatus } from "react-dom";
+import { sellVehicle, updateSellVehicle } from "@/app/(admin)/_actions/sell";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
-const SellVehicleForm = () => {
+
+const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any }) => {
+  const [nid, setNid] = useState<string>(payment != null ? payment.customer.nid : '');
+
+  const [customerData, setCustomerData] = useState<Customer>(payment != null && payment?.customer);
+  const debonceValue = useDebounce(nid);
+  const router = useRouter();
+
+  const [data, action] = useFormState(payment == null ? sellVehicle : updateSellVehicle.bind(null, payment.id), null);
+
+  const handleCustomer = async () => {
+    const res = await fetch("/api/sell/" + nid);
+    const data = await res.json();
+    setCustomerData(data);
+  };
+
+  useEffect(() => {
+    if (nid.length > 9) {
+      handleCustomer();
+    }
+  }, [debonceValue]);
+
+  useEffect(() => {
+    if (data?.success != null) {
+      toast.success(data.success);
+      router.push("/vehicle");
+    } else if (data?.db) {
+      toast.error(data.db);
+    }
+  }, [data]);
+
   return (
     <>
       {/* form */}
       {/* customer form */}
-      <form action="">
+      <form action={action}>
         <Section className="pt-5 pb-8">
           <h3 className="text-primary font-semibold border-b border-secondary pb-2">
             Customer Information
           </h3>
-          <div className="grid grid-cols-3 gap-3 my-5">
+
+          <div className="my-5 border-b pb-5">
+            <p className=" w-[400px]">
+              <Label htmlFor="nid">National ID</Label>
+              <Input
+                id="nid"
+                name="nid"
+                value={nid}
+                onChange={(e) => setNid(e.target.value)}
+                placeholder="ex. XXXXXXXXX"
+              />
+            </p>
+            {nid.length <= 9 && (
+              <p className="error-msg">At least 10 characters</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 my-5 border-b pb-5">
             <p>
               <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Enter customer full name" />
+              <Input
+                id="name"
+                name="name"
+                defaultValue={customerData && customerData?.name}
+                placeholder="Enter customer full name"
+              />
+              {data?.error && <p className="error-msg">{data.error.name}</p>}
             </p>
             <p>
-              <Label htmlFor="father_name">Father&apos;s Name</Label>
-              <Input id="father_name" placeholder="Enter father name" />
+              <Label htmlFor="fatherName">Father&apos;s Name</Label>
+              <Input
+                id="fatherName"
+                name="fatherName"
+                defaultValue={(customerData && customerData.fatherName) || ""}
+                placeholder="Enter father name"
+              />
+              {data?.error && (
+                <p className="error-msg">{data.error.fatherName}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="mother_name">Mother&apos;s Name</Label>
-              <Input id="mother_name" placeholder="Enter mother name" />
+              <Label htmlFor="motherName">Mother&apos;s Name</Label>
+              <Input
+                id="motherName"
+                name="motherName"
+                defaultValue={(customerData && customerData.motherName) || ""}
+                placeholder="Enter mother name"
+              />
+              {data?.error && (
+                <p className="error-msg">{data.error.motherName}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="spouse_name">Spouse Name</Label>
-              <Input id="spouse_name" placeholder="Enter spouse name" />
-            </p>
-            <p>
-              <Label htmlFor="nid">National ID</Label>
-              <Input type="number" id="nid" placeholder="ex. XXXXXXXXX" />
+              <Label htmlFor="spouseName">Spouse Name</Label>
+              <Input
+                id="spouseName"
+                name="spouseName"
+                defaultValue={(customerData && customerData.spouseName) || ""}
+                placeholder="Enter spouse name"
+              />
+              {data?.error && (
+                <p className="error-msg">{data.error.spouseName}</p>
+              )}
             </p>
             <p>
               <Label htmlFor="mobile">Mobile</Label>
-              <Input type="number" id="mobile" placeholder="ex. 01777 333444" />
-            </p>
-            <p>
-              <Label htmlFor="mobile_2">Mobile 2</Label>
-              <Input type="number" id="mobile_2" placeholder="ex. 01777 333444 (optional)" />
-            </p>
-            <p>
-              <Label htmlFor="mobile_3">Mobile 3</Label>
-              <Input type="number" id="mobile_3" placeholder="ex. 01777 333444 (optional)"  />
+              <Input
+                name="mobile"
+                id="mobile"
+                placeholder="ex. 01777 333444"
+                defaultValue={(customerData && customerData.mobile) || ""}
+              />
+              {data?.error && <p className="error-msg">{data.error.mobile}</p>}
             </p>
           </div>
 
-          <div className="address grid grid-cols-3 gap-3">
+          <div className="address grid grid-cols-1 md:grid-cols-3 gap-3">
             <p>
-              <Label htmlFor="House Name">House Name</Label>
-              <Input id="House Name" placeholder="Enter house name or number" />
+              <Label htmlFor="houseName">House Name</Label>
+              <Input
+                id="houseName"
+                defaultValue={(customerData && customerData.houseName) || ""}
+                placeholder="Enter house name or number"
+              />
             </p>
             <p>
               <Label htmlFor="village">Village</Label>
-              <Input id="village" placeholder="Enter village name" />
+              <Input
+                id="village"
+                defaultValue={(customerData && customerData.village) || ""}
+                placeholder="Enter village name"
+              />
             </p>
             <p>
-              <Label htmlFor="post_office">Post Office</Label>
-              <Input id="post_office" placeholder="Enter post office name" />
+              <Label htmlFor="postOffice">Post Office</Label>
+              <Input
+                id="postOffice"
+                defaultValue={(customerData && customerData.postOffice) || ""}
+                placeholder="Enter post office name"
+              />
             </p>
             <p>
               <Label htmlFor="upazilla">Upazilla</Label>
-              <Input id="upazilla" placeholder="Enter upazilla name" />
+              <Input
+                id="upazilla"
+                defaultValue={(customerData && customerData.upazilla) || ""}
+                placeholder="Enter upazilla name"
+              />
             </p>
             <p>
               <Label htmlFor="district">District</Label>
-              <Input id="district" placeholder="Enter district" />
+              <Input
+                id="district"
+                defaultValue={(customerData && customerData.district) || ""}
+                placeholder="Enter district"
+              />
             </p>
           </div>
         </Section>
@@ -83,43 +182,111 @@ const SellVehicleForm = () => {
           </h3>
           <div className="my-5 grid grid-cols-3 gap-3">
             <p>
-              <Label htmlFor="vehicle_no">Vehicle No.</Label>
-              <Input id="vehicle_no" placeholder="Enter vehicle number"/>
+              <Label htmlFor="engineNo">Vehicle No.</Label>
+              <Input
+                id="engineNo"
+                name="engineNo"
+                value={vehicle && vehicle.engineNo}
+                placeholder="Enter vehicle number"
+              />
+              {data?.error && (
+                <p className="error-msg">{data.error.engineNo}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="price">Price</Label>
-              <Input type="number" id="price" placeholder="Enter selling price" />
+              <Label htmlFor="sellingPrice">Price</Label>
+              <Input
+                type="number"
+                id="sellingPrice"
+                name="sellingPrice"
+                defaultValue={payment != null && payment.sellingPrice}
+                placeholder={`Purchase price ${
+                  vehicle && formatCurrency(vehicle.purchasePrice)
+                }`}
+              />
+              {data?.error && (
+                <p className="error-msg">{data.error.sellingPrice}</p>
+              )}
             </p>
             <p className="flex flex-col gap-1">
-              <Label htmlFor="payment_type">Payment Type</Label>
-              <Select id="payment_type" className="bg-white" defaultValue={""}>
+              <Label htmlFor="vehicleType">Payment Type</Label>
+              <Select
+                id="vehicleType"
+                name="vehicleType"
+                className="bg-white"
+                value={payment != null && payment.vehicleType}
+              >
                 <option value="">Select Type</option>
                 <option value="emi">EMI</option>
-                <option value="full_payment">Full Payment</option>
+                <option value="full-payment">Full Payment</option>
               </Select>
+              {data?.error && (
+                <p className="error-msg">{data.error.vehicleType}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="paid_amount">Paid Amount</Label>
-              <Input type="number" id="paid_amount" placeholder="Enter paid amount" />
+              <Label htmlFor="paidAmount">Paid Amount</Label>
+              <Input
+                type="number"
+                id="paidAmount"
+                name="paidAmount"
+                placeholder="Enter paid amount"
+                defaultValue={payment != null && payment.paidAmount}
+              />
+              {data?.error && (
+                <p className="error-msg">{data.error.paidAmount}</p>
+              )}
             </p>
             <p>
-              <Label htmlFor="no_emi">No of EMI</Label>
-              <Input type="number" id="no_emi" placeholder="Enter the number of total month of EMI" />
+              <Label htmlFor="emiNo">No of EMI</Label>
+              <Input
+                type="number"
+                id="emiNo"
+                name="emiNo"
+                defaultValue={payment != null && payment.emiNo}
+                placeholder="Enter the number of total month of EMI"
+              />
+              {data?.error && <p className="error-msg">{data.error.emiNo}</p>}
             </p>
-            <p>
-              <Label htmlFor="no_emi_month">EMI Date</Label>
-              <Input type="date" id="no_emi_month" />
+            <p className="">
+              <Label htmlFor="emiDate">EMI Date</Label>
+              {/* <DatePicker date={date} setDate={setDate} /> */}
+              <Input
+                type="date"
+                id="emiDate"
+                name="emiDate"
+                value={payment != null ? format(payment.emiDate, 'yyyy-MM-dd') : ''}
+              />
+              {data?.error && <p className="error-msg">{data.error.emiDate}</p>}
             </p>
 
             <p>
-              <Label htmlFor="interest_rate">Interest Rate (per Lac)</Label>
-              <Input type="number" id="interest_rate" placeholder="Enter per month interest per lac" />
+              <Label htmlFor="interestRate">Interest Rate (per Lac)</Label>
+              <Input
+                type="number"
+                id="interestRate"
+                name="interestRate"
+                value={payment != null ? payment.interestRate : ''}
+                placeholder="Enter per month interest per lac"
+              />
+              {data?.error && (
+                <p className="error-msg">{data.error.interestRate}</p>
+              )}
             </p>
           </div>
-          <Button size={"sm"}>Submit</Button>
+          <SubmitButton />
         </Section>
       </form>
     </>
+  );
+};
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? `Submitting...` : `Submit`}
+    </Button>
   );
 };
 
