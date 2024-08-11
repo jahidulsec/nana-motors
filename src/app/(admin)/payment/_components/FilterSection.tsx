@@ -17,7 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import PurchaseForm from "./PurchaseForm";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -80,7 +79,7 @@ const FilterSection = () => {
           <DialogHeader>
             <DialogTitle>Add Vehicle</DialogTitle>
           </DialogHeader>
-          <PurchaseForm onClose={() => setPurchase(false)} />
+          {/* <PurchaseForm onClose={() => setPurchase(false)} /> */}
         </DialogContent>
       </Dialog>
     </>
