@@ -53,11 +53,11 @@ model Vehicle {
 }
 
 model Payment {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   customerId   Int
   vehicleId    Int
   sellingPrice Int
-  vehicleType  String   @default("emi") // emi, full-payment
+  vehicleType  String    @default("emi") // emi, full-payment
   emiNo        Int?
   interestRate Int?
   emiDate      DateTime? @default(now())
@@ -78,8 +78,10 @@ model Emi {
   paymentAmount    Int
   interestAmount   Int
   totalAmount      Int
+  method String? @default("cash") // cash, bank cheque, bkash, rocket, nagad
   paymentReference String
   givenBy          String?
+  refeneceNo       String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

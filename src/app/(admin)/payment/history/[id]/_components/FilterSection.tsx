@@ -11,9 +11,12 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { SendHorizonal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const FilterSection = () => {
   const [search, setSearch] = useState("");
+  const [payment, setPayment] = useState<any>()
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname()
@@ -54,6 +57,13 @@ const FilterSection = () => {
               <SelectItem value="1">Available</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="buttons flex gap-3">
+          <Button size={"sm"} onClick={() => setPayment(true)}>
+            <span>Payment</span>
+            <SendHorizonal className="size-4 ml-2" />
+          </Button>
         </div>
 
       </div>

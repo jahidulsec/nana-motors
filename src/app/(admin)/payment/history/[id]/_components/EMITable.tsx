@@ -32,16 +32,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteVehicle } from "../../_actions/vehicle";
 import { toast } from "react-toastify";
-import VehicleTag from "../../vehicle/_components/VehicleTag";
-import PaymentType from "./PaymentType";
 
-type Payments = Prisma.PaymentGetPayload<{
-  include: { vehicle: true; customer: true };
+
+type Payments = Prisma.EmiGetPayload<{
+  include: { payment: true};
 }>;
 
-const PaymentTable = ({ payments }: { payments: Payments[] }) => {
+const EMITable = ({ emiData }: { emiData: Payments[] }) => {
   const [editVehicle, setEditVehicle] = useState<any>(false);
   const [delVehicle, setDelVehicle] = useState<any>();
 
@@ -53,37 +51,34 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
         <TableHeader>
           <TableRow>
             <TableHead>Id</TableHead>
-            <TableHead>Engine No.</TableHead>
-            <TableHead>Selling Date</TableHead>
-            <TableHead>Selling Price</TableHead>
-            <TableHead>Customer Name</TableHead>
-            <TableHead>Contact No.</TableHead>
-            <TableHead className="text-center">Type</TableHead>
-            <TableHead className="text-center">Status</TableHead>
+            <TableHead>Payment Date</TableHead>
+            <TableHead>Payment Amount</TableHead>
+            <TableHead>Refenece No.</TableHead>
+            <TableHead className="text-center">Method</TableHead>
+            <TableHead>Given By</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {payments.length > 0 ? (
-            payments.map((item) => (
+          {emiData.length > 0 ? (
+            emiData.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell className="w-[150px]">
-                  {item.vehicle.engineNo}
+                  {/* {item.vehicle.engineNo} */}
                 </TableCell>
-                <TableCell>{formatDate(item.emiDate || item.createdAt)}</TableCell>
-                <TableCell>{formatCurrency(item.sellingPrice)}</TableCell>
-                <TableCell>{item.customer.name}</TableCell>
-                <TableCell>{item.customer.mobile}</TableCell>
+                <TableCell>{formatDate(item.createdAt)}</TableCell>
+                {/* <TableCell>{formatCurrency(item.sellingPrice)}</TableCell> */}
+                {/* <TableCell>{item.customer.name}</TableCell> */}
+                {/* <TableCell>{item.customer.mobile}</TableCell> */}
                 <TableCell align="center">
-                  <PaymentType tagName={item.vehicleType as string} />
+                  {/* <PaymentType tagName={item.vehicleType as string} /> */}
                 </TableCell>
                 <TableCell align="center">
-                  <VehicleTag tagName={item.vehicle.status as string} />
+                  {/* <VehicleTag tagName={item.vehicle.status as string} /> */}
                 </TableCell>
                 <TableCell className="flex gap-1 justify-end">
-                  {item.vehicleType === "emi" && (
                     <Tooltips title="EMI">
                       <Link href={`/payment/history/${item.id}`}>
                         <Button
@@ -95,7 +90,6 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
                         </Button>
                       </Link>
                     </Tooltips>
-                  )}
 
                   <Tooltips title="Edit">
                     <Button
@@ -104,9 +98,9 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
                       variant={"outline"}
                       className="rounded-full size-8"
                     >
-                      <Link href={`/vehicle/sell/${item.vehicleId}`}>
+                      {/* <Link href={`/vehicle/sell/${item.vehicleId}`}> */}
                         <Edit className="size-4" />
-                      </Link>
+                      {/* </Link> */}
                     </Button>
                   </Tooltips>
                   <Tooltips title="Delete">
@@ -166,7 +160,7 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
               disabled={isPending}
               onClick={() => {
                 startTransition(async () => {
-                  await deleteVehicle(delVehicle);
+                //   await deleteVehicle(delVehicle);
                   toast.success("Vehicle has been deleted");
                 });
               }}
@@ -180,4 +174,4 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
   );
 };
 
-export default PaymentTable;
+export default EMITable;

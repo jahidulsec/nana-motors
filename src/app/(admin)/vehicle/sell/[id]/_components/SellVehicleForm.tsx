@@ -255,7 +255,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
                 type="date"
                 id="emiDate"
                 name="emiDate"
-                value={payment != null ? format(payment.emiDate, 'yyyy-MM-dd') : ''}
+                defaultValue={payment != null ? format(payment.emiDate, 'yyyy-MM-dd') as string : undefined}
               />
               {data?.error && <p className="error-msg">{data.error.emiDate}</p>}
             </p>
