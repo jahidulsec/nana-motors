@@ -17,10 +17,16 @@ export type PaymentDetails = Prisma.PaymentGetPayload<{
 }>;
 
 const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
-  const [paymentDetails] = await Promise.all([
+  const [paymentDetails, totalPaidEmiAmount] = await Promise.all([
     db.payment.findUnique({
       where: { id: Number(params.id) },
       include: { customer: true, vehicle: true },
+    }),
+    db.emi.aggregate({
+      where: { paymentId: Number(params.id) },
+      _sum: {
+        paymentAmount: true,
+      },
     }),
   ]);
 
@@ -31,8 +37,13 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
       100000) *
     (paymentDetails?.interestRate as number);
 
+  const totalPaidAmount =
+    Number(paymentDetails?.paidAmount) +
+    Number(totalPaidEmiAmount._sum.paymentAmount);
+
   const totalDue =
-    noOfMonthDue * interestAmount +
+    noOfMonthDue * interestAmount -
+    Number(totalPaidEmiAmount._sum.paymentAmount) +
     Number(paymentDetails?.sellingPrice as number) -
     (paymentDetails?.paidAmount as number);
 
@@ -58,7 +69,7 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
 
             <article className="flex flex-col gap-1 justify-center items-center">
               <h4 className="text-lg font-semibold text-primary">
-                {formatCurrency((interestAmount * noOfMonthDue))}
+                {formatCurrency(interestAmount * noOfMonthDue)}
               </h4>
               <p className="text-gray-400 text-[12px]">Interest</p>
             </article>
@@ -67,7 +78,7 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
 
             <article className="flex flex-col gap-1 justify-center items-center">
               <h4 className="text-lg font-semibold text-primary">
-                {formatCurrency(paymentDetails?.paidAmount as number)}
+                {formatCurrency(totalPaidAmount)}
               </h4>
               <p className="text-gray-400 text-[12px]">Paid Amount</p>
             </article>

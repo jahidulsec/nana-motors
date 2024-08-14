@@ -214,7 +214,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
                 id="vehicleType"
                 name="vehicleType"
                 className="bg-white"
-                value={payment != null && payment.vehicleType}
+                defaultValue={payment != null ? payment.vehicleType : ''}
               >
                 <option value="">Select Type</option>
                 <option value="emi">EMI</option>
@@ -231,7 +231,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
                 id="paidAmount"
                 name="paidAmount"
                 placeholder="Enter paid amount"
-                defaultValue={payment != null && payment.paidAmount}
+                defaultValue={payment != null ? payment.paidAmount : null}
               />
               {data?.error && (
                 <p className="error-msg">{data.error.paidAmount}</p>
@@ -243,7 +243,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
                 type="number"
                 id="emiNo"
                 name="emiNo"
-                defaultValue={payment != null && payment.emiNo}
+                defaultValue={payment != null ? payment.emiNo : null}
                 placeholder="Enter the number of total month of EMI"
               />
               {data?.error && <p className="error-msg">{data.error.emiNo}</p>}
@@ -266,7 +266,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
                 type="number"
                 id="interestRate"
                 name="interestRate"
-                value={payment != null ? payment.interestRate : ''}
+                defaultValue={payment != null ? payment.interestRate : ''}
                 placeholder="Enter per month interest per lac"
               />
               {data?.error && (

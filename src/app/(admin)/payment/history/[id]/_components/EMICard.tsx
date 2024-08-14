@@ -38,7 +38,7 @@ const EMICard = ({payment}: {payment: PaymentDetails}) => {
         </p>
         <p className="flex flex-col gap-1">
           <span className="text-gray-500 text-sm">Monthly Total</span>
-          <span className="text-primary">{Number(emiAmount) + Number(interestAmount)}</span>
+          <span className="text-primary">{(Number(emiAmount) + Number(interestAmount)).toFixed(2)}</span>
         </p>
         
         <p className="flex flex-col gap-1">

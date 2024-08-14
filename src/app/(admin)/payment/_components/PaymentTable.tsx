@@ -36,6 +36,7 @@ import { deleteVehicle } from "../../_actions/vehicle";
 import { toast } from "react-toastify";
 import VehicleTag from "../../vehicle/_components/VehicleTag";
 import PaymentType from "./PaymentType";
+import { deletePayment } from "../../_actions/payment";
 
 type Payments = Prisma.PaymentGetPayload<{
   include: { vehicle: true; customer: true };
@@ -43,7 +44,7 @@ type Payments = Prisma.PaymentGetPayload<{
 
 const PaymentTable = ({ payments }: { payments: Payments[] }) => {
   const [editVehicle, setEditVehicle] = useState<any>(false);
-  const [delVehicle, setDelVehicle] = useState<any>();
+  const [delPayment, setDelPayment] = useState<any>();
 
   const [isPending, startTransition] = useTransition();
 
@@ -114,7 +115,7 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
                       size={"icon"}
                       variant={"destructive"}
                       className="rounded-full size-8"
-                      onClick={() => setDelVehicle(item.id)}
+                      onClick={() => setDelPayment(item.id)}
                     >
                       <Trash className="size-4" />
                     </Button>
@@ -151,7 +152,7 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
       </Dialog>
 
       {/* alert delete vehicle modal */}
-      <AlertDialog open={!!delVehicle} onOpenChange={setDelVehicle}>
+      <AlertDialog open={!!delPayment} onOpenChange={setDelPayment}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -166,7 +167,7 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
               disabled={isPending}
               onClick={() => {
                 startTransition(async () => {
-                  await deleteVehicle(delVehicle);
+                  await deletePayment(delPayment);
                   toast.success("Vehicle has been deleted");
                 });
               }}

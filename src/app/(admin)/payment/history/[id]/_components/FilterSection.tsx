@@ -13,6 +13,8 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SendHorizonal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import PaymentForm from "./PaymentForm";
 
 const FilterSection = () => {
   const [search, setSearch] = useState("");
@@ -67,6 +69,16 @@ const FilterSection = () => {
         </div>
 
       </div>
+
+      {/* purchase car modal */}
+      <Dialog open={payment} onOpenChange={setPayment}>
+        <DialogContent className="w-[75vw]">
+          <DialogHeader>
+            <DialogTitle>Payment</DialogTitle>
+          </DialogHeader>
+          <PaymentForm onClose={() => setPayment(false)} />
+        </DialogContent>
+      </Dialog>
 
      
     </>

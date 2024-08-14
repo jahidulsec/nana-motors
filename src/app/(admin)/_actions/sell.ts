@@ -44,7 +44,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       where: { engineNo: data.engineNo },
     });
 
-    if(vehicle != null &&vehicle?.status !== 'available') {
+    if(vehicle != null && vehicle?.status !== 'available') {
       return { error: null, success: null, db: 'Vehicle is already sold' };
     }
 

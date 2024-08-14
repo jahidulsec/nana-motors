@@ -18,7 +18,13 @@ import {
 } from "@/components/ui/table";
 
 import { formatCurrency, formatDate } from "@/lib/formatter";
-import { CreditCard, Edit, MessageSquareOff, ShoppingCart, Trash } from "lucide-react";
+import {
+  CreditCard,
+  Edit,
+  MessageSquareOff,
+  ShoppingCart,
+  Trash,
+} from "lucide-react";
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
@@ -34,9 +40,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-toastify";
 
-
 type Payments = Prisma.EmiGetPayload<{
-  include: { payment: true};
+  include: { payment: true };
 }>;
 
 const EMITable = ({ emiData }: { emiData: Payments[] }) => {
@@ -54,7 +59,7 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
             <TableHead>Payment Date</TableHead>
             <TableHead>Payment Amount</TableHead>
             <TableHead>Refenece No.</TableHead>
-            <TableHead className="text-center">Method</TableHead>
+            <TableHead>Method</TableHead>
             <TableHead>Given By</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -65,41 +70,22 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
             emiData.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
-                <TableCell className="w-[150px]">
-                  {/* {item.vehicle.engineNo} */}
-                </TableCell>
                 <TableCell>{formatDate(item.createdAt)}</TableCell>
-                {/* <TableCell>{formatCurrency(item.sellingPrice)}</TableCell> */}
-                {/* <TableCell>{item.customer.name}</TableCell> */}
-                {/* <TableCell>{item.customer.mobile}</TableCell> */}
-                <TableCell align="center">
-                  {/* <PaymentType tagName={item.vehicleType as string} /> */}
-                </TableCell>
-                <TableCell align="center">
-                  {/* <VehicleTag tagName={item.vehicle.status as string} /> */}
-                </TableCell>
-                <TableCell className="flex gap-1 justify-end">
-                    <Tooltips title="EMI">
-                      <Link href={`/payment/history/${item.id}`}>
-                        <Button
-                          size={"icon"}
-                          variant={"outline"}
-                          className="rounded-full size-8"
-                        >
-                          <CreditCard className="size-4" />
-                        </Button>
-                      </Link>
-                    </Tooltips>
+                <TableCell>{formatCurrency(item.paymentAmount)}</TableCell>
+                <TableCell>{formatDate(item.createdAt)}</TableCell>
 
-                  <Tooltips title="Edit">
+                <TableCell>{item.method}</TableCell>
+                <TableCell>{item.givenBy}</TableCell>
+                <TableCell className="flex gap-1 justify-end">
+                 <Tooltips title="Edit">
                     <Button
-                      asChild
+                      // asChild
                       size={"icon"}
                       variant={"outline"}
                       className="rounded-full size-8"
                     >
                       {/* <Link href={`/vehicle/sell/${item.vehicleId}`}> */}
-                        <Edit className="size-4" />
+                      <Edit className="size-4" />
                       {/* </Link> */}
                     </Button>
                   </Tooltips>
@@ -160,7 +146,7 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
               disabled={isPending}
               onClick={() => {
                 startTransition(async () => {
-                //   await deleteVehicle(delVehicle);
+                  //   await deleteVehicle(delVehicle);
                   toast.success("Vehicle has been deleted");
                 });
               }}

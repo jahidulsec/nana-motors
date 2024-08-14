@@ -69,21 +69,18 @@ model Payment {
   Emi       Emi[]
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
-  vehicle  Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  vehicle  Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 }
 
 model Emi {
-  id               Int      @id @default(autoincrement())
-  paymentId        Int
-  paymentAmount    Int
-  interestAmount   Int
-  totalAmount      Int
-  method String? @default("cash") // cash, bank cheque, bkash, rocket, nagad
-  paymentReference String
-  givenBy          String?
-  refeneceNo       String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  paymentId     Int
+  paymentAmount Int
+  method        String  @default("cash") // cash, bank-cheque, bkash, rocket, nagad
+  givenBy       String?
+  refeneceNo    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 }
