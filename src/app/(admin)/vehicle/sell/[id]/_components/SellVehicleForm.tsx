@@ -78,7 +78,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Input
                 id="name"
                 name="name"
-                defaultValue={customerData && customerData?.name}
+                defaultValue={customerData ? customerData?.name : ''}
                 placeholder="Enter customer full name"
               />
               {data?.error && <p className="error-msg">{data.error.name}</p>}

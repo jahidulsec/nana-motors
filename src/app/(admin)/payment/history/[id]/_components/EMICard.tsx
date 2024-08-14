@@ -21,18 +21,6 @@ const EMICard = ({payment}: {payment: PaymentDetails}) => {
           <span className="text-primary">{formatDate(payment.emiDate as Date)}</span>
         </p>
         <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Monthly EMI Amount</span>
-          <span className="text-primary">{emiAmount}</span>
-        </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Monthly Interest Amount</span>
-          <span className="text-primary">{interestAmount}</span>
-        </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Monthly Total Amount</span>
-          <span className="text-primary">{Number(emiAmount) + Number(interestAmount)}</span>
-        </p>
-        <p className="flex flex-col gap-1">
           <span className="text-gray-500 text-sm">No. of EMI</span>
           <span className="text-primary">{payment.emiNo}</span>
         </p>
@@ -40,6 +28,19 @@ const EMICard = ({payment}: {payment: PaymentDetails}) => {
           <span className="text-gray-500 text-sm">Engine No.</span>
           <span className="text-primary">{payment.vehicle.engineNo}</span>
         </p>
+        <p className="flex flex-col gap-1">
+          <span className="text-gray-500 text-sm">Monthly EMI</span>
+          <span className="text-primary">{emiAmount}</span>
+        </p>
+        <p className="flex flex-col gap-1">
+          <span className="text-gray-500 text-sm">Monthly Interest</span>
+          <span className="text-primary">{interestAmount}</span>
+        </p>
+        <p className="flex flex-col gap-1">
+          <span className="text-gray-500 text-sm">Monthly Total</span>
+          <span className="text-primary">{Number(emiAmount) + Number(interestAmount)}</span>
+        </p>
+        
         <p className="flex flex-col gap-1">
           <span className="text-gray-500 text-sm">No. of Interest Month</span>
           <span className="text-primary">{noOfMonthDue}</span>

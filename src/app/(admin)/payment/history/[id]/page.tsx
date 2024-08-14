@@ -58,6 +58,15 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
 
             <article className="flex flex-col gap-1 justify-center items-center">
               <h4 className="text-lg font-semibold text-primary">
+                {formatCurrency((interestAmount * noOfMonthDue))}
+              </h4>
+              <p className="text-gray-400 text-[12px]">Interest</p>
+            </article>
+
+            <div className="bg-gray-400 h-[2.5rem] w-[1px]"></div>
+
+            <article className="flex flex-col gap-1 justify-center items-center">
+              <h4 className="text-lg font-semibold text-primary">
                 {formatCurrency(paymentDetails?.paidAmount as number)}
               </h4>
               <p className="text-gray-400 text-[12px]">Paid Amount</p>
