@@ -5,6 +5,7 @@ import db from "../../../../db/db";
 import { revalidatePath } from "next/cache";
 import { countMonth } from "@/lib/countMonth";
 import { notFound } from "next/navigation";
+import { CodeSquare } from "lucide-react";
 
 const addSchema = z.object({
   paymentId: z.coerce.number().int().min(1),
@@ -41,7 +42,19 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
       },
     });
 
-    const noOfMonthDue = countMonth(new Date(), payment.emiDate as Date);
+    const prevEmiDate = await db.emi.findFirst({
+      where: { paymentId: data.paymentId },
+      select: {
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const prevNoOfMonthDue = countMonth(
+      prevEmiDate?.createdAt as Date,
+      payment.emiDate as Date,
+    );
+
     const interestAmount =
       (((payment?.sellingPrice as number) - (payment?.paidAmount as number)) /
         100000) *
@@ -52,7 +65,7 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
       Number(payment.paidAmount) + Number(totalEmiAmount._sum.paymentAmount);
 
     const prevTotalDueAmount =
-      Number(interestAmount * noOfMonthDue) +
+      Number(interestAmount * prevNoOfMonthDue) +
       Number(payment.sellingPrice) +
       -Number(prevTotalPaidAmount);
 
@@ -72,15 +85,19 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
     });
 
     // if complete
-    const totalPaidAmount =
-      Number(prevTotalPaidAmount) + Number(data.paymentAmount);
-    const totalDueAmount =
-      Number(prevTotalDueAmount) - Number(data.paymentAmount);
+    // payable check
 
-    console.log(totalPaidAmount);
-    console.log(prevTotalPaidAmount);
-    console.log(prevTotalDueAmount);
-    console.log(totalDueAmount);
+    const noOfMonthDue = countMonth(new Date(), payment.emiDate as Date);
+
+    const totalPaidAmount =
+      Number(payment.paidAmount) +
+      Number(totalEmiAmount._sum.paymentAmount) +
+      data.paymentAmount;
+
+    const totalDueAmount =
+      Number(interestAmount * noOfMonthDue) +
+      Number(payment.sellingPrice) +
+      -Number(totalPaidAmount);
 
     if (totalDueAmount == 0) {
       await db.payment.update({
@@ -107,6 +124,114 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
       db: "Something Went Wrong",
     };
   }
+};
+
+export const updateEmiPayment = async (
+  id: number,
+  prevState: unknown,
+  formData: FormData,
+) => {
+  const result = addSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (result.success === false) {
+    return { error: result.error.formErrors.fieldErrors, success: null };
+  }
+
+  const data = result.data;
+  const emiPayment = await db.emi.findUnique({ where: { id } });
+
+  // get all emi amount
+  if (emiPayment == null) return notFound();
+
+  const payment = await db.payment.findUnique({
+    where: { id: data.paymentId },
+  });
+
+  
+
+
+  await db.emi.update({
+    where: { id },
+    data: {
+      paymentAmount: data.paymentAmount,
+      method: data.method,
+      paymentId: data.paymentId,
+      refeneceNo: data.referenceNo,
+      givenBy: data.givenBy,
+    },
+  });
+
+  const [totalEmiAmount, prevEmiDate ] = await Promise.all([
+    await db.emi.aggregate({
+      where: { paymentId: data.paymentId },
+      _sum: {
+        paymentAmount: true,
+      },
+    }),
+    await db.emi.findFirst({
+      where: { paymentId: data.paymentId },
+      select: {
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    })
+  ])
+
+  
+
+  const interestAmount =
+    (((payment?.sellingPrice as number) - (payment?.paidAmount as number)) /
+      100000) *
+    (payment?.interestRate as number);
+
+
+  const noOfMonthDue = countMonth(
+    prevEmiDate?.createdAt as Date,
+    payment?.emiDate as Date,
+  );
+
+
+  const totalPaidAmount =
+    Number(payment?.paidAmount) +
+    Number(totalEmiAmount._sum.paymentAmount) +
+    data.paymentAmount;
+
+  const totalDueAmount =
+    Number(interestAmount * noOfMonthDue) +
+    Number(payment?.sellingPrice) +
+    -Number(totalPaidAmount);
+
+    console.log(totalDueAmount)
+
+  if (totalDueAmount > 0) {
+    await db.payment.update({
+      where: { id: data.paymentId },
+      data: {
+        vehicle: {
+          update: {
+            status: "in-emi",
+          },
+        },
+      },
+    });
+  } else {
+    await db.payment.update({
+      where: { id: data.paymentId },
+      data: {
+        vehicle: {
+          update: {
+            status: "sold",
+          },
+        },
+      },
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/payment");
+  revalidatePath("/payment/history/" + data.paymentId);
+
+  return { error: null, success: "Payment updated", db: null };
 };
 
 export const deletePayment = async (id: number) => {

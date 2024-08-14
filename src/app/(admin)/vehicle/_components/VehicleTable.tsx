@@ -61,7 +61,7 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
 
         <TableBody>
           {vehicle.length > 0 ? (
-            vehicle.map((item) => (
+            vehicle.map((item, idx) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell className="w-[150px]">{item.engineNo}</TableCell>

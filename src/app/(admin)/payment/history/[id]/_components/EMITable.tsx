@@ -35,6 +35,7 @@ import {
 import { toast } from "react-toastify";
 import { deleteEmi } from "@/app/(admin)/_actions/payment";
 import { useParams } from "next/navigation";
+import PaymentForm from "./PaymentForm";
 
 type Payments = Prisma.EmiGetPayload<{
   include: { payment: true };
@@ -64,26 +65,24 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
 
         <TableBody>
           {emiData.length > 0 ? (
-            emiData.map((item) => (
+            emiData.map((item, idx) => (
               <TableRow key={item.id}>
-                <TableCell>{item.id}</TableCell>
+                <TableCell>{idx + 1}</TableCell>
                 <TableCell>{formatDate(item.createdAt)}</TableCell>
                 <TableCell>{formatCurrency(item.paymentAmount)}</TableCell>
-                <TableCell>{formatDate(item.createdAt)}</TableCell>
+                <TableCell>{item.refeneceNo}</TableCell>
 
                 <TableCell>{item.method}</TableCell>
                 <TableCell>{item.givenBy}</TableCell>
                 <TableCell className="flex gap-1 justify-end">
                   <Tooltips title="Edit">
                     <Button
-                      // asChild
                       size={"icon"}
                       variant={"outline"}
                       className="rounded-full size-8"
+                      onClick={() => {setEditPayment(item)}}
                     >
-                      {/* <Link href={`/vehicle/sell/${item.vehicleId}`}> */}
                       <Edit className="size-4" />
-                      {/* </Link> */}
                     </Button>
                   </Tooltips>
                   <Tooltips title="Delete">
@@ -116,14 +115,14 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
       <Dialog open={editPayment} onOpenChange={setEditPayment}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Vehicle</DialogTitle>
+            <DialogTitle>Edit Payment</DialogTitle>
           </DialogHeader>
-          {/* <PurchaseForm
-            vehicle={editPayment}
+          <PaymentForm
+            emi={editPayment}
             onClose={() => {
               setEditPayment(false);
             }}
-          /> */}
+          />
         </DialogContent>
       </Dialog>
 

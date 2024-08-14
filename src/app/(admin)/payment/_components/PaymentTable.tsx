@@ -3,12 +3,6 @@
 import Tooltips from "@/components/Tooltips";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   Table,
   TableBody,
   TableCell,
@@ -32,7 +26,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteVehicle } from "../../_actions/vehicle";
 import { toast } from "react-toastify";
 import VehicleTag from "../../vehicle/_components/VehicleTag";
 import PaymentType from "./PaymentType";
@@ -43,7 +36,6 @@ type Payments = Prisma.PaymentGetPayload<{
 }>;
 
 const PaymentTable = ({ payments }: { payments: Payments[] }) => {
-  const [editVehicle, setEditVehicle] = useState<any>(false);
   const [delPayment, setDelPayment] = useState<any>();
 
   const [isPending, startTransition] = useTransition();
@@ -67,7 +59,7 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
 
         <TableBody>
           {payments.length > 0 ? (
-            payments.map((item) => (
+            payments.map((item, idx) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell className="w-[150px]">
@@ -136,20 +128,7 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
         </TableBody>
       </Table>
 
-      {/* sell car modal */}
-      <Dialog open={editVehicle} onOpenChange={setEditVehicle}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Vehicle</DialogTitle>
-          </DialogHeader>
-          {/* <PurchaseForm
-            vehicle={editVehicle}
-            onClose={() => {
-              setEditVehicle(false);
-            }}
-          /> */}
-        </DialogContent>
-      </Dialog>
+
 
       {/* alert delete vehicle modal */}
       <AlertDialog open={!!delPayment} onOpenChange={setDelPayment}>
