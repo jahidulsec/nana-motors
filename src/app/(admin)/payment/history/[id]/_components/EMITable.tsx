@@ -18,13 +18,7 @@ import {
 } from "@/components/ui/table";
 
 import { formatCurrency, formatDate } from "@/lib/formatter";
-import {
-  CreditCard,
-  Edit,
-  MessageSquareOff,
-  ShoppingCart,
-  Trash,
-} from "lucide-react";
+import { Edit, MessageSquareOff, Trash } from "lucide-react";
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
@@ -39,14 +33,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-toastify";
+import { deleteEmi } from "@/app/(admin)/_actions/payment";
+import { useParams } from "next/navigation";
 
 type Payments = Prisma.EmiGetPayload<{
   include: { payment: true };
 }>;
 
 const EMITable = ({ emiData }: { emiData: Payments[] }) => {
-  const [editVehicle, setEditVehicle] = useState<any>(false);
-  const [delVehicle, setDelVehicle] = useState<any>();
+  const [editPayment, setEditPayment] = useState<any>(false);
+  const [delPayment, setDelPayment] = useState<any>();
+  const params = useParams()
 
   const [isPending, startTransition] = useTransition();
 
@@ -77,7 +74,7 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
                 <TableCell>{item.method}</TableCell>
                 <TableCell>{item.givenBy}</TableCell>
                 <TableCell className="flex gap-1 justify-end">
-                 <Tooltips title="Edit">
+                  <Tooltips title="Edit">
                     <Button
                       // asChild
                       size={"icon"}
@@ -94,7 +91,7 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
                       size={"icon"}
                       variant={"destructive"}
                       className="rounded-full size-8"
-                      onClick={() => setDelVehicle(item.id)}
+                      onClick={() => setDelPayment(item.id)}
                     >
                       <Trash className="size-4" />
                     </Button>
@@ -116,22 +113,22 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
       </Table>
 
       {/* sell car modal */}
-      <Dialog open={editVehicle} onOpenChange={setEditVehicle}>
+      <Dialog open={editPayment} onOpenChange={setEditPayment}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Vehicle</DialogTitle>
           </DialogHeader>
           {/* <PurchaseForm
-            vehicle={editVehicle}
+            vehicle={editPayment}
             onClose={() => {
-              setEditVehicle(false);
+              setEditPayment(false);
             }}
           /> */}
         </DialogContent>
       </Dialog>
 
       {/* alert delete vehicle modal */}
-      <AlertDialog open={!!delVehicle} onOpenChange={setDelVehicle}>
+      <AlertDialog open={!!delPayment} onOpenChange={setDelPayment}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -146,8 +143,8 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
               disabled={isPending}
               onClick={() => {
                 startTransition(async () => {
-                  //   await deleteVehicle(delVehicle);
-                  toast.success("Vehicle has been deleted");
+                  await deleteEmi(delPayment, Number(params.id));
+                  toast.success("EMI has been deleted");
                 });
               }}
             >

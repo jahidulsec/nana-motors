@@ -17,10 +17,10 @@ export type PaymentDetails = Prisma.PaymentGetPayload<{
 }>;
 
 const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
-  const [paymentDetails, totalPaidEmiAmount] = await Promise.all([
+  const [paymentDetails, totalPaidEmiAmount, lastEmiDate] = await Promise.all([
     db.payment.findUnique({
       where: { id: Number(params.id) },
-      include: { customer: true, vehicle: true },
+      include: { customer: true, vehicle: true},
     }),
     db.emi.aggregate({
       where: { paymentId: Number(params.id) },
@@ -28,9 +28,16 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
         paymentAmount: true,
       },
     }),
+    db.emi.findFirst({where: {paymentId: Number(params.id)}, orderBy: {createdAt: 'desc'}, select: {createdAt: true}})
   ]);
 
-  const noOfMonthDue = countMonth(new Date(), paymentDetails?.emiDate as Date);
+  let noOfMonthDue = countMonth(new Date(), paymentDetails?.emiDate as Date);
+
+  if(paymentDetails?.vehicle.status === 'sold') {
+    noOfMonthDue = countMonth(lastEmiDate?.createdAt as Date, paymentDetails?.emiDate as Date);
+  }
+
+  
   const interestAmount =
     (((paymentDetails?.sellingPrice as number) -
       (paymentDetails?.paidAmount as number)) /
