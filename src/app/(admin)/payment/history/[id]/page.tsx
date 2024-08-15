@@ -106,7 +106,7 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
           <CustomerCard payment={paymentDetails as PaymentDetails} />
 
           {/* EMI Information */}
-          <EMICard payment={paymentDetails as PaymentDetails} />
+          <EMICard payment={paymentDetails as PaymentDetails} noOfMonthDue={noOfMonthDue} />
         </div>
       </Section>
 

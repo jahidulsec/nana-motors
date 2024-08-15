@@ -1,12 +1,14 @@
-import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
 export const middleware = async (req: NextRequest) => {
-  console.log('middleware')
+  if(!req.cookies.has('admin')) {
+    return NextResponse.redirect(new URL('/login', req.url))
+  } 
+
 };
 
 
 
 export const config = {
-  matcher: "/:path*",
+  matcher: ['/', '/payment/:path*', '/vehicle/:path*'],
 };

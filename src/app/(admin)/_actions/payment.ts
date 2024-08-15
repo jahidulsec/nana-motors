@@ -201,7 +201,6 @@ export const updateEmiPayment = async (
     Number(payment?.sellingPrice) +
     -Number(totalPaidAmount);
 
-    console.log(totalDueAmount)
 
   if (totalDueAmount > 0) {
     await db.payment.update({

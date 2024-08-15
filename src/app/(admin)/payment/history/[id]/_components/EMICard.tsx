@@ -3,11 +3,11 @@ import { PaymentDetails } from "../page";
 import { formatDate } from "@/lib/formatter";
 import { countMonth } from "@/lib/countMonth";
 
-const EMICard = ({payment}: {payment: PaymentDetails}) => {
+const EMICard = ({payment, noOfMonthDue}: {payment: PaymentDetails, noOfMonthDue: number}) => {
 
     const emiAmount = ((payment.sellingPrice - payment.paidAmount) / (payment.emiNo as number)).toFixed(2)
     const interestAmount = (payment.sellingPrice - payment.paidAmount) / 100000 * (payment.interestRate as number)
-    const noOfMonthDue = countMonth(new Date(), payment.emiDate as Date)
+   
 
   return (
     <article className="border p-3 rounded-md">

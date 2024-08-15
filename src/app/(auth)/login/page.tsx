@@ -3,14 +3,22 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { adminLogin } from "../_actions/login";
+import { toast } from "react-toastify";
+
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [error, action] = useFormState(adminLogin, {});
+  const [data, action] = useFormState(adminLogin, null);
+
+  useEffect(() => {
+    if(data?.db != null) {
+      toast.error(data.db)
+    }
+  })
 
   return (
     <>
@@ -29,7 +37,7 @@ const LoginPage = () => {
               Username
             </Label>
             <Input type="text" name="username" id="username" />
-            {error?.username && <p className="error-msg">{error.username}</p>}
+            {data?.error?.username && <p className="error-msg">{data.error.username}</p>}
           </p>
 
           <p className="relative">
@@ -49,7 +57,7 @@ const LoginPage = () => {
             >
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             </div>
-            {error?.password && <p className="error-msg">{error.password}</p>}
+            {data?.error?.password && <p className="error-msg">{data.error.password}</p>}
           </p>
 
           <SubmitButton />
