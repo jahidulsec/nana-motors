@@ -136,6 +136,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="houseName">House Name</Label>
               <Input
                 id="houseName"
+                name="houseName"
                 defaultValue={(customerData && customerData.houseName) || ""}
                 placeholder="Enter house name or number"
               />
@@ -144,6 +145,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="village">Village</Label>
               <Input
                 id="village"
+                name="village"
                 defaultValue={(customerData && customerData.village) || ""}
                 placeholder="Enter village name"
               />
@@ -152,6 +154,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="postOffice">Post Office</Label>
               <Input
                 id="postOffice"
+                name="postOffice"
                 defaultValue={(customerData && customerData.postOffice) || ""}
                 placeholder="Enter post office name"
               />
@@ -160,6 +163,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="upazilla">Upazilla</Label>
               <Input
                 id="upazilla"
+                name="upazilla"
                 defaultValue={(customerData && customerData.upazilla) || ""}
                 placeholder="Enter upazilla name"
               />
@@ -168,6 +172,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="district">District</Label>
               <Input
                 id="district"
+                name="district"
                 defaultValue={(customerData && customerData.district) || ""}
                 placeholder="Enter district"
               />

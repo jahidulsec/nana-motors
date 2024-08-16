@@ -22,7 +22,7 @@ const addSchema = z.object({
 
   sellingPrice: z.coerce.number().int().min(1000),
   paidAmount: z.coerce.number().int().min(1000),
-  emiNo: z.coerce.number().int(),
+  emiNo: z.coerce.number().int().optional(),
   interestRate: z.coerce.number().int().optional(),
   emiDate: z.string().optional(),
   vehicleType: z.string().min(1),
@@ -48,6 +48,8 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       return { error: null, success: null, db: 'Vehicle is already sold' };
     }
 
+    console.log(data)
+
     if (user == null && vehicle != null) {
       const customer = await db.customer.create({
         data: {
@@ -71,7 +73,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,
           interestRate: data.interestRate,
-          emiDate: new Date(data.emiDate || ""),
+          emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
           paidAmount: data.paidAmount,
           customerId: customer.id,
         },
@@ -84,7 +86,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,
           interestRate: data.interestRate,
-          emiDate: new Date(data.emiDate || ""),
+          emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
           paidAmount: data.paidAmount,
           customerId: user.id,
         },
@@ -103,6 +105,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
 
     return { error: null, success: "Vehicle is successfully selled" };
   } catch (error) {
+    console.log(error)
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return {
@@ -155,7 +158,7 @@ export const updateSellVehicle = async (
         vehicleType: data.vehicleType,
         emiNo: data.emiNo,
         interestRate: data.interestRate,
-        emiDate: new Date(data.emiDate || ""),
+        emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
         paidAmount: data.paidAmount,
         customerId: customer.id,
       },

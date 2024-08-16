@@ -16,49 +16,50 @@ const FilterSection = () => {
   const [search, setSearch] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const debounceValue = useDebounce(search);
 
-  const params = new URLSearchParams(searchParams)
+  const params = new URLSearchParams(searchParams);
 
   useEffect(() => {
     if (search) {
-      params.set('q', debounceValue)
+      params.set("q", debounceValue);
     } else {
-      params.delete('q')
+      params.delete("q");
     }
-    router.push(pathname + '?' + params.toString())
-  },[debounceValue])
+    router.push(pathname + "?" + params.toString());
+  }, [debounceValue]);
 
   return (
     <>
       <div className="filters flex justify-between items-center gap-5 my-5">
         <div className="filters flex gap-3 items-center">
           <Input
-            placeholder="Search by engine number"
+            placeholder="Search by engine number, name, NID"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <Select onValueChange={(value) => {
-            params.set('status', value)
-            params.toString()
-            router.push(pathname + '?' + params.toString())
-          }}>
+          <Select
+            value={searchParams.get("status") || undefined}
+            onValueChange={(value) => {
+              params.set("status", value);
+              params.toString();
+              router.push(pathname + "?" + params.toString());
+            }}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="0">Sold</SelectItem>
               <SelectItem value="1">Available</SelectItem>
+              <SelectItem value="2">In EMI</SelectItem>
             </SelectContent>
           </Select>
         </div>
-
       </div>
-
-     
     </>
   );
 };
