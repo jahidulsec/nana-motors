@@ -12,6 +12,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -20,7 +21,6 @@ import {
 import { formatCurrency, formatDate } from "@/lib/formatter";
 import { Edit, MessageSquareOff, Trash } from "lucide-react";
 import React, { useState, useTransition } from "react";
-import Link from "next/link";
 import { Prisma } from "@prisma/client";
 import {
   AlertDialog,
@@ -52,29 +52,29 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
     <>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="font-para">
             <TableHead>Id</TableHead>
             <TableHead>Payment Date</TableHead>
-            <TableHead>Payment Amount</TableHead>
             <TableHead>Refenece No.</TableHead>
             <TableHead>Method</TableHead>
             <TableHead>Given By</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Payment Amount</TableHead>
+            <TableHead className="text-right print:hidden display-hidden">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {emiData.length > 0 ? (
             emiData.map((item, idx) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id} className="font-para">
                 <TableCell>{idx + 1}</TableCell>
                 <TableCell>{formatDate(item.createdAt)}</TableCell>
-                <TableCell>{formatCurrency(item.paymentAmount)}</TableCell>
                 <TableCell>{item.refeneceNo}</TableCell>
 
                 <TableCell>{item.method}</TableCell>
                 <TableCell>{item.givenBy}</TableCell>
-                <TableCell className="flex gap-1 justify-end">
+                <TableCell>{formatCurrency(item.paymentAmount)}</TableCell>
+                <TableCell className="flex gap-1 justify-end print:hidden display-hidden">
                   <Tooltips title="Edit">
                     <Button
                       size={"icon"}

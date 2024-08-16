@@ -8,13 +8,13 @@ const AdminLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="min-h-screen flex relative">
+    <div className="bg-teal-50/75 font-sans antialiased min-h-screen flex relative">
       <SideNav />
       <div className="w-full">
         <NavBar />
-        <div className="container mt-2">
+        <main className="container mt-2">
           {children}
-        </div>
+        </main>
       </div>
     </div>
   );

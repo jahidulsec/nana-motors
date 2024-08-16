@@ -1,0 +1,45 @@
+.page {
+    @page {
+        size: A4;
+        margin: 0.5in;
+    }
+
+
+
+    .container {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 0.5in;
+        font-family: "Inter", sans-serif;
+        font-size: 12px;
+        background: white;
+        border: 1px solid lightgray;
+        position: relative;
+    }
+
+    .font-title {
+        font-size: 14px;
+    }
+
+    .font-para {
+        font-size: 11px;
+    }
+
+    .display-hidden {
+        display: none;
+    }
+
+
+
+    @media print {
+        .container {
+            border: none;
+            padding: 0;
+        }
+
+
+        td {
+            padding: 0.5rem;
+        }
+    }
+}

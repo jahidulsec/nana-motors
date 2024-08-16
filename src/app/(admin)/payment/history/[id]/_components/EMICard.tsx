@@ -1,7 +1,6 @@
 import React from "react";
 import { PaymentDetails } from "../page";
 import { formatDate } from "@/lib/formatter";
-import { countMonth } from "@/lib/countMonth";
 
 const EMICard = ({payment, noOfMonthDue}: {payment: PaymentDetails, noOfMonthDue: number}) => {
 
@@ -11,42 +10,42 @@ const EMICard = ({payment, noOfMonthDue}: {payment: PaymentDetails, noOfMonthDue
 
   return (
     <article className="border p-3 rounded-md">
-      <h3 className="text-lg text-primary font-medium border-b pb-1">
+      <h3 className="text-lg text-primary font-medium border-b pb-1 font-title">
         EMI Details
       </h3>
 
-      <div className="grid gap-3 md:grid-cols-3 my-3">
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">EMI Date</span>
+      <div className="grid gap-3 sm:grid-cols-3 my-3">
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">EMI Date</span>
           <span className="text-primary">{formatDate(payment.emiDate as Date)}</span>
         </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">No. of EMI</span>
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">No. of EMI</span>
           <span className="text-primary">{payment.emiNo}</span>
         </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Engine No.</span>
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">Engine No.</span>
           <span className="text-primary">{payment.vehicle.engineNo}</span>
         </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Monthly EMI</span>
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">Monthly EMI</span>
           <span className="text-primary">{emiAmount}</span>
         </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Monthly Interest</span>
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">Monthly Interest</span>
           <span className="text-primary">{interestAmount}</span>
         </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Monthly Total</span>
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">Monthly Total</span>
           <span className="text-primary">{(Number(emiAmount) + Number(interestAmount)).toFixed(2)}</span>
         </p>
         
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">No. of Interest Month</span>
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">No. of Interest Month</span>
           <span className="text-primary">{noOfMonthDue}</span>
         </p>
-        <p className="flex flex-col gap-1">
-          <span className="text-gray-500 text-sm">Total Interest</span>
+        <p className="flex flex-col font-para gap-1">
+          <span className="text-gray-500 text-sm font-para">Total Interest</span>
           <span className="text-primary">{noOfMonthDue * interestAmount}</span>
         </p>
       </div>
