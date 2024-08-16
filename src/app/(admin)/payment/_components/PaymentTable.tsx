@@ -117,7 +117,7 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
             ))
           ) : (
             <TableCell
-              colSpan={7}
+              colSpan={9}
               align="center"
               className="py-20 text-gray-400 pointer-events-none"
             >

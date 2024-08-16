@@ -127,7 +127,7 @@ function SideNavItem({
     <Link
       href={href}
       className={cn(`${className} flex gap-5 p-2 text-sm items-center rounded-md transition-all duration-500 hover:bg-primary hover:text-primary-foreground ${
-        pathname === href ? "text-primary-foreground bg-primary" : ""
+        (pathname === href ) ? "text-primary-foreground bg-primary" : ""
       }`)}
       onClick={onClick}
     >
