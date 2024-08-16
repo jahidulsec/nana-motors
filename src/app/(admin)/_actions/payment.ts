@@ -51,7 +51,7 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
     });
 
     const prevNoOfMonthDue = countMonth(
-      prevEmiDate?.createdAt as Date,
+      prevEmiDate?.createdAt as Date || new Date(),
       payment.emiDate as Date,
     );
 
@@ -118,6 +118,7 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
 
     return { error: null, success: "Payment Successful", db: null };
   } catch (error) {
+    console.log(error)
     return {
       error: null,
       success: null,
