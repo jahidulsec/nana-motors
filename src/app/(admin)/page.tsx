@@ -1,46 +1,52 @@
-'use client'
-import React from "react";
-import { TaskTable } from "./_components/TaskTable";
-import Section from "@/components/Section";
+import { BadgeDollarSign, Car } from "lucide-react";
+import Card from "./_components/Card";
+import db from "../../../db/db";
 
-const DashboardHome = () => {
+const DashboardHome = async () => {
+  const [availableCount, inProgressCount, inEmiCount, soldCount] =
+    await Promise.all([
+      db.vehicle.count({ where: { status: "available" } }),
+      db.vehicle.count({ where: { status: "in-emi" } }),
+      db.vehicle.count({ where: { status: "in-emi" } }),
+      db.vehicle.count({ where: { status: "sold" } }),
+    ]);
+
   return (
-    <Section>
-      {/* header */}
-      <div className="header flex gap-5 justify-between items-center">
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-primary mb-2">
-            Last tasks
-          </h2>
-          <p className="text-[12px] text-gray-500">
-            <b className="font-semibold text-gray-700 text-sm">117 total, </b>
-            proceed to resolve them
-          </p>
-        </div>
+    <div className="flex justify-center items-center flex-col gap-5 min-h-[30rem]">
+      <div className="py-5 text-center">
+        <h1 className="text-3xl ">
+          Hello <span className="font-semibold">Jahidul,</span>
+        </h1>
+        <p className="text-sm text-gray-500">
+          Welcome to <strong>Nana Motors</strong>
+        </p>
+      </div>
 
+      <div className="">
         {/* cards */}
-        <div className="cards flex gap-5 justify-center items-center ">
-          <article className="flex flex-col gap-1 justify-center items-center">
-            <h4 className="text-3xl font-semibold text-primary">94</h4>
-            <p className="text-gray-400 text-[12px]">Done</p>
-          </article>
-
-          <div className="bg-gray-400 h-[2.5rem] w-[1px]"></div>
-
-          <article className="flex flex-col gap-1 justify-center items-center">
-            <h4 className="text-3xl font-semibold text-primary">20</h4>
-            <p className="text-gray-400 text-[12px]">In progress</p>
-          </article>
+        <div className="flex gap-0.5">
+          <Card
+            href="/vehicle"
+            title="Vehicle"
+            icon={<Car className="size-5" />}
+            card1="In Stock"
+            count1={availableCount}
+            card2="In Progress"
+            count2={inProgressCount}
+          />
+          <Card
+            href="/payment"
+            title="Payment"
+            icon={<BadgeDollarSign className="size-5" />}
+            card1="Done"
+            count1={soldCount}
+            card2="In EMI"
+            count2={inEmiCount}
+          />
         </div>
       </div>
-
-      {/* data table of recent task */}
-      <div className="my-5">
-        <TaskTable />
-      </div>
-    </Section>
+    </div>
   );
 };
-
 
 export default DashboardHome;
