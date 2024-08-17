@@ -20,7 +20,7 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
   const [paymentDetails, totalPaidEmiAmount, lastEmiDate] = await Promise.all([
     db.payment.findUnique({
       where: { id: Number(params.id) },
-      include: { customer: true, vehicle: true},
+      include: { customer: true, vehicle: true },
     }),
     db.emi.aggregate({
       where: { paymentId: Number(params.id) },
@@ -28,16 +28,22 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
         paymentAmount: true,
       },
     }),
-    db.emi.findFirst({where: {paymentId: Number(params.id)}, orderBy: {createdAt: 'desc'}, select: {createdAt: true}})
+    db.emi.findFirst({
+      where: { paymentId: Number(params.id) },
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true },
+    }),
   ]);
 
   let noOfMonthDue = countMonth(new Date(), paymentDetails?.emiDate as Date);
 
-  if(paymentDetails?.vehicle.status === 'sold') {
-    noOfMonthDue = countMonth(lastEmiDate?.createdAt as Date, paymentDetails?.emiDate as Date);
+  if (paymentDetails?.vehicle.status === "sold") {
+    noOfMonthDue = countMonth(
+      lastEmiDate?.createdAt as Date,
+      paymentDetails?.emiDate as Date,
+    );
   }
 
-  
   const interestAmount =
     (((paymentDetails?.sellingPrice as number) -
       (paymentDetails?.paidAmount as number)) /
@@ -59,9 +65,12 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
       {/* vehicle info */}
       <Section>
         <div className="header flex gap-5 justify-between items-center mb-8">
-          <h2 className="text-2xl font-semibold text-primary mb-2">
-            Payment Information
-          </h2>
+          <div className="">
+            <h2 className="text-2xl font-semibold text-primary mb-2">
+              Payment Information
+            </h2>
+            <h5 className="font-light text-gray-500 uppercase"># {paymentDetails?.invoiceNo}</h5>
+          </div>
 
           {/* cards */}
           <div className="cards flex gap-5 justify-center items-center ">
@@ -106,7 +115,10 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
           <CustomerCard payment={paymentDetails as PaymentDetails} />
 
           {/* EMI Information */}
-          <EMICard payment={paymentDetails as PaymentDetails} noOfMonthDue={noOfMonthDue} />
+          <EMICard
+            payment={paymentDetails as PaymentDetails}
+            noOfMonthDue={noOfMonthDue}
+          />
         </div>
       </Section>
 
@@ -156,10 +168,10 @@ const PaymentHistoryPage = async ({ params }: { params: { id: string } }) => {
   );
 };
 
-type EMI = Prisma.EmiGetPayload<{ include: { payment: true } }>;
+type EMI = Prisma.EmiGetPayload<{ include: { payment: true, admin: true } }>;
 
 const DataTable = async () => {
-  const data = await db.emi.findMany({ include: { payment: true } });
+  const data = await db.emi.findMany({ include: { payment: true, admin: true } });
 
   return (
     <>

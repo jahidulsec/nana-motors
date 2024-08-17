@@ -53,7 +53,7 @@ const PurchaseForm = ({ vehicle, onClose }: VehicleProps) => {
           </p>
 
           <p className="flex flex-col gap-1">
-            <Label htmlFor="carCondition">Car Type</Label>
+            <Label htmlFor="carCondition">Car Condition</Label>
             <Select
               id="carCondition"
               name="carCondition"

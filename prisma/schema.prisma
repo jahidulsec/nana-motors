@@ -65,6 +65,7 @@ model Vehicle {
 
 model Payment {
   id           Int       @id @default(autoincrement())
+  invoiceNo    String    @unique
   customerId   Int
   vehicleId    Int
   sellingPrice Int

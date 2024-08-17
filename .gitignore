@@ -38,3 +38,6 @@ next-env.d.ts
 #db
 /prisma/migrations
 /prisma/dev.dv
+
+
+*.bat

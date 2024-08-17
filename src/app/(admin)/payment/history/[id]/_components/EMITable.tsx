@@ -38,7 +38,7 @@ import { useParams } from "next/navigation";
 import PaymentForm from "./PaymentForm";
 
 type Payments = Prisma.EmiGetPayload<{
-  include: { payment: true };
+  include: { payment: true, admin: true };
 }>;
 
 const EMITable = ({ emiData }: { emiData: Payments[] }) => {
@@ -58,6 +58,7 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
             <TableHead>Refenece No.</TableHead>
             <TableHead>Method</TableHead>
             <TableHead>Given By</TableHead>
+            <TableHead>Received By</TableHead>
             <TableHead>Payment Amount</TableHead>
             <TableHead className="text-right print:hidden display-hidden">Actions</TableHead>
           </TableRow>
@@ -73,7 +74,8 @@ const EMITable = ({ emiData }: { emiData: Payments[] }) => {
 
                 <TableCell>{item.method}</TableCell>
                 <TableCell>{item.givenBy}</TableCell>
-                <TableCell>{formatCurrency(item.paymentAmount)}</TableCell>
+                <TableCell>{item.admin.fullName}</TableCell>
+                <TableCell className="text-right">{formatCurrency(item.paymentAmount)}</TableCell>
                 <TableCell className="flex gap-1 justify-end print:hidden display-hidden">
                   <Tooltips title="Edit">
                     <Button

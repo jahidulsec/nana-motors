@@ -49,10 +49,15 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       where: { engineNo: data.engineNo },
     });
 
+    const payments = await db.payment.findFirst({orderBy: {createdAt: 'desc'}})
+
     if(vehicle != null && vehicle?.status !== 'available') {
       return { error: null, success: null, db: 'Vehicle is already sold' };
     }
 
+
+    const currentDate = new Date()
+    const invoiceNo = `inv-nm-${currentDate.getFullYear()}${currentDate.getMonth()}${Number(payments?.id || 0) + 1}`
     
 
     if (user == null && vehicle != null) {
@@ -75,6 +80,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       await db.payment.create({
         data: {
           vehicleId: vehicle.id,
+          invoiceNo: invoiceNo,
           sellingPrice: data.sellingPrice,
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,
@@ -89,6 +95,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       await db.payment.create({
         data: {
           vehicleId: vehicle.id,
+          invoiceNo: invoiceNo,
           sellingPrice: data.sellingPrice,
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,

@@ -8,7 +8,7 @@ const AdminLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="bg-teal-50/75 font-sans antialiased min-h-screen flex relative">
+    <div className="bg-teal-50/75 font-sans antialiased min-h-screen flex relative min-w-[85rem]">
       <SideNav />
       <div className="w-full">
         <NavBar />
