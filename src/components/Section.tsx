@@ -3,7 +3,7 @@ import React from 'react'
 
 const Section = ({children, className}: {children: React.ReactNode, className?: string}) => {
   return (
-    <section className={cn('bg-card px-6 py-3 rounded-md mt-5 border border-muted', className)}>
+    <section className={cn('bg-card px-6 py-3 rounded-md my-5 border border-muted', className)}>
         {children}
     </section>
   )

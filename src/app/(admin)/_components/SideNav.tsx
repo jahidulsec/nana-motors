@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useTransition } from "react";
 import {
   BadgeDollarSign,
   LayoutDashboard,
   Car,
   LogOut,
-  Menu,
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
@@ -15,9 +14,15 @@ import Image from "next/image";
 import { Rickshaw } from "@/assets";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { adminLogout } from "@/app/(auth)/_actions/login";
+import { toast } from "react-toastify";
+import { useRouter } from "next-nprogress-bar";
 
 export default function SideNav() {
   const [open, setOpen] = useState(true);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter()
 
   return (
     <>
@@ -70,9 +75,17 @@ export default function SideNav() {
 
         <div className="">
           <SideNavItem
+            className="text-red-500 hover:bg-red-400"
             title="Log out"
             href=""
             icon={<LogOut className="size-5" />}
+            onClick={() => {
+              startTransition(async () => {
+                await adminLogout();
+                router.refresh()
+                toast.success("You are logged out");
+              });
+            }}
           />
         </div>
       </aside>
@@ -98,19 +111,25 @@ function SideNavItem({
   title,
   href,
   icon,
+  className,
+  onClick
 }: {
   title: string;
   href: string;
+  className?: string;
   icon: ReactNode;
+  onClick?: () => void
+  
 }) {
   const pathname = usePathname();
 
   return (
     <Link
       href={href}
-      className={`flex gap-5 p-2 text-sm items-center rounded-md transition-all duration-500 hover:bg-primary hover:text-primary-foreground ${
-        pathname === href ? "text-primary-foreground bg-primary" : ""
-      }`}
+      className={cn(`${className} flex gap-5 p-2 text-sm items-center rounded-md transition-all duration-500 hover:bg-primary hover:text-primary-foreground ${
+        (pathname === href ) ? "text-primary-foreground bg-primary" : ""
+      }`)}
+      onClick={onClick}
     >
       {icon}
       <span className="text-nowrap">{title}</span>

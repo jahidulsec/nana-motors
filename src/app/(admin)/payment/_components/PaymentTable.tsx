@@ -3,12 +3,6 @@
 import Tooltips from "@/components/Tooltips";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   Table,
   TableBody,
   TableCell,
@@ -18,13 +12,10 @@ import {
 } from "@/components/ui/table";
 
 import { formatCurrency, formatDate } from "@/lib/formatter";
-import { Edit, MessageSquareOff, ShoppingCart, Trash } from "lucide-react";
+import { CreditCard, Edit, MessageSquareOff, ShoppingCart, Trash } from "lucide-react";
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
-import VehicleTag from "./VehicleTag";
-import PurchaseForm from "./PurchaseForm";
-import { Vehicle } from "@prisma/client";
-import ConditionTag from "./ConditionTag";
+import { Prisma } from "@prisma/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,12 +26,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteVehicle } from "../../_actions/vehicle";
 import { toast } from "react-toastify";
+import VehicleTag from "../../vehicle/_components/VehicleTag";
+import PaymentType from "./PaymentType";
+import { deletePayment } from "../../_actions/payment";
 
-const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
-  const [editVehicle, setEditVehicle] = useState<any>(false);
-  const [delVehicle, setDelVehicle] = useState<any>();
+type Payments = Prisma.PaymentGetPayload<{
+  include: { vehicle: true; customer: true };
+}>;
+
+const PaymentTable = ({ payments }: { payments: Payments[] }) => {
+  const [delPayment, setDelPayment] = useState<any>();
 
   const [isPending, startTransition] = useTransition();
 
@@ -51,49 +47,59 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
           <TableRow>
             <TableHead>Id</TableHead>
             <TableHead>Engine No.</TableHead>
-            <TableHead>Purchase Date</TableHead>
-            <TableHead>Purchase Price</TableHead>
+            <TableHead>Selling Date</TableHead>
+            <TableHead>Selling Price</TableHead>
+            <TableHead>Customer Name</TableHead>
+            <TableHead>Contact No.</TableHead>
+            <TableHead className="text-center">Type</TableHead>
             <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-center">Condition</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {vehicle.length > 0 ? (
-            vehicle.map((item, idx) => (
+          {payments.length > 0 ? (
+            payments.map((item, idx) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
-                <TableCell className="w-[150px]">{item.engineNo}</TableCell>
-                <TableCell>{formatDate(item.createdAt)}</TableCell>
-                <TableCell>{formatCurrency(item.purchasePrice)}</TableCell>
+                <TableCell className="w-[150px]">
+                  {item.vehicle.engineNo}
+                </TableCell>
+                <TableCell>{formatDate(item.emiDate || item.createdAt)}</TableCell>
+                <TableCell>{formatCurrency(item.sellingPrice)}</TableCell>
+                <TableCell>{item.customer.name}</TableCell>
+                <TableCell>{item.customer.mobile}</TableCell>
                 <TableCell align="center">
-                  <VehicleTag tagName={item.status as string} />
+                  <PaymentType tagName={item.vehicleType as string} />
                 </TableCell>
                 <TableCell align="center">
-                  <ConditionTag tagName={item.carCondition as string} />
+                  <VehicleTag tagName={item.vehicle.status as string} />
                 </TableCell>
                 <TableCell className="flex gap-1 justify-end">
-                  <Tooltips title="Sell Vehicle">
-                    <Link href={`/vehicle/sell/${item.id}`}>
-                      <Button
-                        size={"icon"}
-                        variant={"outline"}
-                        className="rounded-full size-8"
-                      >
-                        <ShoppingCart className="size-4" />
-                      </Button>
-                    </Link>
-                  </Tooltips>
+                  {item.vehicleType === "emi" && (
+                    <Tooltips title="EMI">
+                      <Link href={`/payment/history/${item.id}`}>
+                        <Button
+                          size={"icon"}
+                          variant={"outline"}
+                          className="rounded-full size-8"
+                        >
+                          <CreditCard className="size-4" />
+                        </Button>
+                      </Link>
+                    </Tooltips>
+                  )}
 
                   <Tooltips title="Edit">
                     <Button
+                      asChild
                       size={"icon"}
                       variant={"outline"}
                       className="rounded-full size-8"
-                      onClick={() => setEditVehicle(item)}
                     >
-                      <Edit className="size-4" />
+                      <Link href={`/vehicle/sell/${item.vehicleId}`}>
+                        <Edit className="size-4" />
+                      </Link>
                     </Button>
                   </Tooltips>
                   <Tooltips title="Delete">
@@ -101,7 +107,7 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
                       size={"icon"}
                       variant={"destructive"}
                       className="rounded-full size-8"
-                      onClick={() => setDelVehicle(item.id)}
+                      onClick={() => setDelPayment(item.id)}
                     >
                       <Trash className="size-4" />
                     </Button>
@@ -111,7 +117,7 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
             ))
           ) : (
             <TableCell
-              colSpan={7}
+              colSpan={9}
               align="center"
               className="py-20 text-gray-400 pointer-events-none"
             >
@@ -122,23 +128,10 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
         </TableBody>
       </Table>
 
-      {/* sell car modal */}
-      <Dialog open={editVehicle} onOpenChange={setEditVehicle}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Vehicle</DialogTitle>
-          </DialogHeader>
-          <PurchaseForm
-            vehicle={editVehicle}
-            onClose={() => {
-              setEditVehicle(false);
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+
 
       {/* alert delete vehicle modal */}
-      <AlertDialog open={!!delVehicle} onOpenChange={setDelVehicle}>
+      <AlertDialog open={!!delPayment} onOpenChange={setDelPayment}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -153,7 +146,7 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
               disabled={isPending}
               onClick={() => {
                 startTransition(async () => {
-                  await deleteVehicle(delVehicle);
+                  await deletePayment(delPayment);
                   toast.success("Vehicle has been deleted");
                 });
               }}
@@ -167,4 +160,4 @@ const VehicleTable = ({ vehicle }: { vehicle: Vehicle[] }) => {
   );
 };
 
-export default VehicleTable;
+export default PaymentTable;

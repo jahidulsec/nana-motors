@@ -12,7 +12,7 @@ export function titleCase(title: string) {
       return `৳ ${new Intl.NumberFormat("en-IN").format(amount)}`
   }
   
-  const NUMBER_FORMATTER = new Intl.NumberFormat("en-us");
+  const NUMBER_FORMATTER = new Intl.NumberFormat("en-IN");
   
   export const formatNumber = (number: number) => {
     return NUMBER_FORMATTER.format(number);

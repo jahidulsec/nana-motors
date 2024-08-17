@@ -5,6 +5,7 @@ import db from "../../../../db/db";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
 const addSchema = z.object({
   engineNo: z.string().min(3),
@@ -24,11 +25,14 @@ export const addVehicle = async (prevState: unknown, formData: FormData) => {
   }
 
   const data = result.data;
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
 
   try {
     await db.vehicle.create({
       data: {
         ...data,
+        adminId: Number(admin.uid)
       },
     });
 
@@ -38,6 +42,7 @@ export const addVehicle = async (prevState: unknown, formData: FormData) => {
 
     return { error: null, success: "Vehicle has been added" };
   } catch (error) {
+    console.log(error)
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return {
@@ -63,6 +68,10 @@ export const updateVehicle = async (
 
   const data = result.data;
   const vehicle = await db.vehicle.findUnique({ where: { id: id } });
+  
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
+
 
   if (vehicle == null) return notFound();
 
@@ -71,6 +80,7 @@ export const updateVehicle = async (
       where: { id: id },
       data: {
         ...data,
+        adminId: Number(admin.uid)
       },
     });
 

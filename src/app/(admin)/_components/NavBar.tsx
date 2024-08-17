@@ -1,35 +1,65 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
+import { titleCase } from "@/lib/formatter";
 import { Search } from "lucide-react";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Fragment, useEffect } from "react";
 
 const NavBar = () => {
   const pathname = usePathname();
 
+  useEffect(() => {
+    console.log(pathname.split("/").slice(1));
+  }, [pathname]);
+
   return (
     <div className="sticky top-0 z-10 w-full bg-card border-b py-3 px-[2rem] flex justify-between items-center shadow-sm">
-      <h4 className="text-lg font-semibold text-primary">
-        {pathname === '/' ? "DASHBOARD" : 
-        pathname.toUpperCase().split('/').slice(1,3).reverse().join(' ')
-        }
-      </h4>
+      
+
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+          </BreadcrumbItem>
+          {pathname.split("/").length > 2 &&
+            pathname
+              .split("/")
+              .slice(1, -1)
+              .map((item) => (
+                <Fragment key={item}>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink>
+                      {titleCase(item)}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                </Fragment>
+              ))}
+
+          {
+          pathname.split("/")[1].length > 1 &&
+          pathname.split("/").length > 1 && (
+            <>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{titleCase(pathname.split("/").pop()?.toString() as string)}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </>
+          )}
+        </BreadcrumbList>
+      </Breadcrumb>
 
       <div className="flex gap-5 justify-end items-center">
-        {/* search bar */}
-        <div className="w-[15rem] relative">
-          <Input
-            className="text-sm pl-8 h-auto py-1 rounded-md text-primary"
-            title="search"
-            placeholder="Search"
-          />
-          <Search className="absolute text-primary top-[50%] -translate-y-[50%] size-4 left-2" />
-        </div>
-
-        <div className="h-8 w-[1px] rounded-full bg-border"></div>
-
         {/* profile */}
         <div className="">
           <Avatar className="h-8 w-8">

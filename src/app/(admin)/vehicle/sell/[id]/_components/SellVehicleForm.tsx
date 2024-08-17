@@ -15,15 +15,28 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 
+const SellVehicleForm = ({
+  vehicle,
+  payment,
+}: {
+  vehicle: Vehicle;
+  payment?: any;
+}) => {
+  const [nid, setNid] = useState<string>(
+    payment != null ? payment.customer.nid : "",
+  );
+  const [isEmi, setIsEmi] = useState(payment?.vehicleType == "emi" || false);
 
-const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any }) => {
-  const [nid, setNid] = useState<string>(payment != null ? payment.customer.nid : '');
-
-  const [customerData, setCustomerData] = useState<Customer>(payment != null && payment?.customer);
+  const [customerData, setCustomerData] = useState<Customer>(
+    payment != null && payment?.customer,
+  );
   const debonceValue = useDebounce(nid);
   const router = useRouter();
 
-  const [data, action] = useFormState(payment == null ? sellVehicle : updateSellVehicle.bind(null, payment.id), null);
+  const [data, action] = useFormState(
+    payment == null ? sellVehicle : updateSellVehicle.bind(null, payment.id),
+    null,
+  );
 
   const handleCustomer = async () => {
     const res = await fetch("/api/sell/" + nid);
@@ -78,7 +91,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Input
                 id="name"
                 name="name"
-                defaultValue={customerData && customerData?.name}
+                defaultValue={customerData ? customerData?.name : ""}
                 placeholder="Enter customer full name"
               />
               {data?.error && <p className="error-msg">{data.error.name}</p>}
@@ -136,6 +149,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="houseName">House Name</Label>
               <Input
                 id="houseName"
+                name="houseName"
                 defaultValue={(customerData && customerData.houseName) || ""}
                 placeholder="Enter house name or number"
               />
@@ -144,6 +158,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="village">Village</Label>
               <Input
                 id="village"
+                name="village"
                 defaultValue={(customerData && customerData.village) || ""}
                 placeholder="Enter village name"
               />
@@ -152,6 +167,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="postOffice">Post Office</Label>
               <Input
                 id="postOffice"
+                name="postOffice"
                 defaultValue={(customerData && customerData.postOffice) || ""}
                 placeholder="Enter post office name"
               />
@@ -160,6 +176,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="upazilla">Upazilla</Label>
               <Input
                 id="upazilla"
+                name="upazilla"
                 defaultValue={(customerData && customerData.upazilla) || ""}
                 placeholder="Enter upazilla name"
               />
@@ -168,6 +185,7 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
               <Label htmlFor="district">District</Label>
               <Input
                 id="district"
+                name="district"
                 defaultValue={(customerData && customerData.district) || ""}
                 placeholder="Enter district"
               />
@@ -214,7 +232,10 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
                 id="vehicleType"
                 name="vehicleType"
                 className="bg-white"
-                value={payment != null && payment.vehicleType}
+                onChange={(e) => {
+                  setIsEmi(e.target.value == "emi" ? true : false);
+                }}
+                defaultValue={payment != null ? payment.vehicleType : ""}
               >
                 <option value="">Select Type</option>
                 <option value="emi">EMI</option>
@@ -231,48 +252,60 @@ const SellVehicleForm = ({ vehicle, payment }: { vehicle: Vehicle, payment?: any
                 id="paidAmount"
                 name="paidAmount"
                 placeholder="Enter paid amount"
-                defaultValue={payment != null && payment.paidAmount}
+                defaultValue={payment != null ? payment.paidAmount : null}
               />
               {data?.error && (
                 <p className="error-msg">{data.error.paidAmount}</p>
               )}
             </p>
-            <p>
-              <Label htmlFor="emiNo">No of EMI</Label>
-              <Input
-                type="number"
-                id="emiNo"
-                name="emiNo"
-                defaultValue={payment != null && payment.emiNo}
-                placeholder="Enter the number of total month of EMI"
-              />
-              {data?.error && <p className="error-msg">{data.error.emiNo}</p>}
-            </p>
-            <p className="">
-              <Label htmlFor="emiDate">EMI Date</Label>
-              {/* <DatePicker date={date} setDate={setDate} /> */}
-              <Input
-                type="date"
-                id="emiDate"
-                name="emiDate"
-                value={payment != null ? format(payment.emiDate, 'yyyy-MM-dd') : ''}
-              />
-              {data?.error && <p className="error-msg">{data.error.emiDate}</p>}
-            </p>
+            {isEmi && (
+              <>
+                <p>
+                  <Label htmlFor="emiNo">No of EMI</Label>
+                  <Input
+                    type="number"
+                    id="emiNo"
+                    name="emiNo"
+                    defaultValue={payment != null ? payment.emiNo : null}
+                    placeholder="Enter the number of total month of EMI"
+                  />
+                  {data?.error && (
+                    <p className="error-msg">{data.error.emiNo}</p>
+                  )}
+                </p>
+                <p className="">
+                  <Label htmlFor="emiDate">EMI Date</Label>
+                  {/* <DatePicker date={date} setDate={setDate} /> */}
+                  <Input
+                    type="date"
+                    id="emiDate"
+                    name="emiDate"
+                    defaultValue={
+                      payment != null
+                        ? (format(payment.emiDate, "yyyy-MM-dd") as string)
+                        : undefined
+                    }
+                  />
+                  {data?.error && (
+                    <p className="error-msg">{data.error.emiDate}</p>
+                  )}
+                </p>
 
-            <p>
-              <Label htmlFor="interestRate">Interest Rate (per Lac)</Label>
-              <Input
-                type="number"
-                id="interestRate"
-                name="interestRate"
-                value={payment != null ? payment.interestRate : ''}
-                placeholder="Enter per month interest per lac"
-              />
-              {data?.error && (
-                <p className="error-msg">{data.error.interestRate}</p>
-              )}
-            </p>
+                <p>
+                  <Label htmlFor="interestRate">Interest Rate (per Lac)</Label>
+                  <Input
+                    type="number"
+                    id="interestRate"
+                    name="interestRate"
+                    defaultValue={payment != null ? payment.interestRate : ""}
+                    placeholder="Enter per month interest per lac"
+                  />
+                  {data?.error && (
+                    <p className="error-msg">{data.error.interestRate}</p>
+                  )}
+                </p>
+              </>
+            )}
           </div>
           <SubmitButton />
         </Section>

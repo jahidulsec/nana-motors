@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -35,6 +35,7 @@ const FilterSection = () => {
   useEffect(() => {
     if (search) {
       params.set('q', debounceValue)
+      params.delete('p')
     } else {
       params.delete('q')
     }
@@ -51,7 +52,7 @@ const FilterSection = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <Select onValueChange={(value) => {
+          <Select value={ searchParams.get('status') || undefined} onValueChange={(value) => {
             params.set('status', value)
             params.toString()
             router.push(pathname + '?' + params.toString())
@@ -62,6 +63,7 @@ const FilterSection = () => {
             <SelectContent>
               <SelectItem value="0">Sold</SelectItem>
               <SelectItem value="1">Available</SelectItem>
+              <SelectItem value="2">In EMI</SelectItem>
             </SelectContent>
           </Select>
         </div>

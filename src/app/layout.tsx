@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-// import { Poppins } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import Providers from "@/contexts/ProgressBarProvider";
 import { ToastContainer } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
+import { AdminContextProvider } from "@/contexts/AdminContext";
 
 export const metadata: Metadata = {
   title: "Nana Motors",
@@ -21,13 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          "bg-teal-50/75 font-sans antialiased",
-          // fontSans.variable,
-        )}
-      >
-        <Providers>{children}</Providers>
+      <body>
+        <Providers>
+          <AdminContextProvider>{children}</AdminContextProvider>
+        </Providers>
         <ToastContainer />
       </body>
     </html>

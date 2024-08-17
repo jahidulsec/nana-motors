@@ -5,6 +5,7 @@ import db from "../../../../db/db";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
 const addSchema = z.object({
   engineNo: z.string().optional(),
@@ -22,7 +23,7 @@ const addSchema = z.object({
 
   sellingPrice: z.coerce.number().int().min(1000),
   paidAmount: z.coerce.number().int().min(1000),
-  emiNo: z.coerce.number().int(),
+  emiNo: z.coerce.number().int().optional(),
   interestRate: z.coerce.number().int().optional(),
   emiDate: z.string().optional(),
   vehicleType: z.string().min(1),
@@ -36,6 +37,10 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
   }
 
   const data = result.data;
+  
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
+
 
   try {
     // check user
@@ -44,9 +49,16 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       where: { engineNo: data.engineNo },
     });
 
-    if(vehicle != null &&vehicle?.status !== 'available') {
+    const payments = await db.payment.findFirst({orderBy: {createdAt: 'desc'}})
+
+    if(vehicle != null && vehicle?.status !== 'available') {
       return { error: null, success: null, db: 'Vehicle is already sold' };
     }
+
+
+    const currentDate = new Date()
+    const invoiceNo = `inv-nm-${currentDate.getFullYear()}${currentDate.getMonth()}${Number(payments?.id || 0) + 1}`
+    
 
     if (user == null && vehicle != null) {
       const customer = await db.customer.create({
@@ -62,31 +74,36 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           postOffice: data.postOffice,
           upazilla: data.upazilla,
           district: data.district,
+          adminId: Number(admin.uid)
         },
       });
       await db.payment.create({
         data: {
           vehicleId: vehicle.id,
+          invoiceNo: invoiceNo,
           sellingPrice: data.sellingPrice,
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,
           interestRate: data.interestRate,
-          emiDate: new Date(data.emiDate || ""),
+          emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
           paidAmount: data.paidAmount,
           customerId: customer.id,
+          adminId: Number(admin.uid)
         },
       });
     } else if (user != null && vehicle != null) {
       await db.payment.create({
         data: {
           vehicleId: vehicle.id,
+          invoiceNo: invoiceNo,
           sellingPrice: data.sellingPrice,
           vehicleType: data.vehicleType,
           emiNo: data.emiNo,
           interestRate: data.interestRate,
-          emiDate: new Date(data.emiDate || ""),
+          emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
           paidAmount: data.paidAmount,
           customerId: user.id,
+          adminId: Number(admin.uid)
         },
       });
     }
@@ -103,6 +120,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
 
     return { error: null, success: "Vehicle is successfully selled" };
   } catch (error) {
+    console.log(error)
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return {
@@ -129,6 +147,9 @@ export const updateSellVehicle = async (
   const data = result.data;
   const sellVehicle = await db.payment.findFirst({ where: { id: id } });
 
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
+
   if (sellVehicle == null) return notFound();
 
   try {
@@ -146,6 +167,8 @@ export const updateSellVehicle = async (
         postOffice: data.postOffice,
         upazilla: data.upazilla,
         district: data.district,
+        adminId: Number(admin.uid)
+
       },
     });
     await db.payment.update({
@@ -155,9 +178,11 @@ export const updateSellVehicle = async (
         vehicleType: data.vehicleType,
         emiNo: data.emiNo,
         interestRate: data.interestRate,
-        emiDate: new Date(data.emiDate || ""),
+        emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
         paidAmount: data.paidAmount,
         customerId: customer.id,
+        adminId: Number(admin.uid)
+
       },
     });
 
