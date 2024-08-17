@@ -27,22 +27,21 @@ export const adminLogin = async (prevData: unknown, formData: FormData) => {
 
   const data = result.data;
 
-  const user = await db.user.findFirst({ where: { username: data.username } });
+  const user = await db.admin.findFirst({ where: { username: data.username } });
 
   if (user == null) {
     return { error: null, success: null, db: "Invalid username" };
   }
 
   if (await isValidPassword(data.password as string, user.password as string)) {
-    const expiresAt = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 1 * 6 * 60 * 60 * 1000);
 
-    const role = await crypto.subtle.digest('SHA-512', new TextEncoder().encode('admin'))
-    const roleString = Buffer.from(role).toString('base64')
-    cookies().set("admin", roleString, {
+
+    cookies().set("ad", JSON.stringify({name: user.fullName, uid: user.id}), {
       httpOnly: true,
-      secure: true,
+      secure: false,
       expires: expiresAt,
-      sameSite: 'lax',
+      sameSite: 'strict',
       path: "/",
     });
     return redirect("/");
@@ -51,5 +50,5 @@ export const adminLogin = async (prevData: unknown, formData: FormData) => {
 };
 
 export const adminLogout = async () => {
-  cookies().delete("admin");
+  cookies().delete("ad");
 };

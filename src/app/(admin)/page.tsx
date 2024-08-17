@@ -1,6 +1,8 @@
 import { BadgeDollarSign, Car } from "lucide-react";
 import Card from "./_components/Card";
 import db from "../../../db/db";
+import DashboardHeader from "./_components/DashboardHeader";
+import { cookies } from "next/headers";
 
 const DashboardHome = async () => {
   const [availableCount, inProgressCount, inEmiCount, soldCount] =
@@ -13,14 +15,7 @@ const DashboardHome = async () => {
 
   return (
     <div className="flex justify-center items-center flex-col gap-5 min-h-[30rem]">
-      <div className="py-5 text-center">
-        <h1 className="text-3xl ">
-          Hello <span className="font-semibold">Jahidul,</span>
-        </h1>
-        <p className="text-sm text-gray-500">
-          Welcome to <strong>Nana Motors</strong>
-        </p>
-      </div>
+      <DashboardHeader />
 
       <div className="">
         {/* cards */}

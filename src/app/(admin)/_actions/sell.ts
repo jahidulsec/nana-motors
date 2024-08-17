@@ -5,6 +5,7 @@ import db from "../../../../db/db";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
 const addSchema = z.object({
   engineNo: z.string().optional(),
@@ -36,6 +37,10 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
   }
 
   const data = result.data;
+  
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
+
 
   try {
     // check user
@@ -48,7 +53,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
       return { error: null, success: null, db: 'Vehicle is already sold' };
     }
 
-    console.log(data)
+    
 
     if (user == null && vehicle != null) {
       const customer = await db.customer.create({
@@ -64,6 +69,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           postOffice: data.postOffice,
           upazilla: data.upazilla,
           district: data.district,
+          adminId: Number(admin.uid)
         },
       });
       await db.payment.create({
@@ -76,6 +82,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
           paidAmount: data.paidAmount,
           customerId: customer.id,
+          adminId: Number(admin.uid)
         },
       });
     } else if (user != null && vehicle != null) {
@@ -89,6 +96,7 @@ export const sellVehicle = async (prevState: unknown, formData: FormData) => {
           emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
           paidAmount: data.paidAmount,
           customerId: user.id,
+          adminId: Number(admin.uid)
         },
       });
     }
@@ -132,6 +140,9 @@ export const updateSellVehicle = async (
   const data = result.data;
   const sellVehicle = await db.payment.findFirst({ where: { id: id } });
 
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
+
   if (sellVehicle == null) return notFound();
 
   try {
@@ -149,6 +160,8 @@ export const updateSellVehicle = async (
         postOffice: data.postOffice,
         upazilla: data.upazilla,
         district: data.district,
+        adminId: Number(admin.uid)
+
       },
     });
     await db.payment.update({
@@ -161,6 +174,8 @@ export const updateSellVehicle = async (
         emiDate: data.emiDate != null ? new Date(data?.emiDate || "") : null,
         paidAmount: data.paidAmount,
         customerId: customer.id,
+        adminId: Number(admin.uid)
+
       },
     });
 

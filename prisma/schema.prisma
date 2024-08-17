@@ -11,10 +11,15 @@ datasource db {
 }
 
 // design database tables here
-model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
+model Admin {
+  id       Int        @id @default(autoincrement())
+  username String     @unique
   password String
+  fullName String
+  Vehicle  Vehicle[]
+  Customer Customer[]
+  Payment  Payment[]
+  Emi      Emi[]
 }
 
 model Customer {
@@ -30,9 +35,12 @@ model Customer {
   postOffice String?
   upazilla   String?
   district   String?
+  adminId    Int
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   Payment    Payment[]
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: NoAction)
 }
 
 model Vehicle {
@@ -45,9 +53,12 @@ model Vehicle {
   sellerAddress String?
   purchasePrice Int
   status        String    @default("available") // available, in-emi, sold
+  adminId       Int
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   Payment       Payment[]
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: NoAction)
 
   @@index([engineNo, status])
 }
@@ -63,10 +74,13 @@ model Payment {
   emiDate      DateTime? @default(now())
 
   paidAmount Int
+  adminId    Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Emi       Emi[]
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: NoAction)
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
   vehicle  Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
@@ -76,11 +90,13 @@ model Emi {
   id            Int      @id @default(autoincrement())
   paymentId     Int
   paymentAmount Int
-  method        String  @default("cash") // cash, bank-cheque, bkash, rocket, nagad
+  method        String   @default("cash") // cash, bank-cheque, bkash, rocket, nagad
   givenBy       String?
   refeneceNo    String?
+  adminId       Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  admin   Admin   @relation(fields: [adminId], references: [id], onDelete: NoAction)
   payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 }

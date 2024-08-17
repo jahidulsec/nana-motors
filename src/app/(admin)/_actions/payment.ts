@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { countMonth } from "@/lib/countMonth";
 import { notFound } from "next/navigation";
 import { CodeSquare } from "lucide-react";
+import { cookies } from "next/headers";
 
 const addSchema = z.object({
   paymentId: z.coerce.number().int().min(1),
@@ -23,6 +24,8 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
   }
 
   const data = result.data;
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
 
   try {
     // check payment
@@ -81,6 +84,7 @@ export const addEmiPayment = async (prevState: unknown, formData: FormData) => {
         givenBy: data.givenBy,
         refeneceNo: data.referenceNo,
         method: data.method,
+        adminId: Number(admin.uid)
       },
     });
 
@@ -141,6 +145,9 @@ export const updateEmiPayment = async (
   const data = result.data;
   const emiPayment = await db.emi.findUnique({ where: { id } });
 
+  const cookieAdmin = cookies().get("ad")?.value
+  const admin = JSON.parse(cookieAdmin as string)
+
   // get all emi amount
   if (emiPayment == null) return notFound();
 
@@ -159,6 +166,7 @@ export const updateEmiPayment = async (
       paymentId: data.paymentId,
       refeneceNo: data.referenceNo,
       givenBy: data.givenBy,
+      adminId: Number(admin.uid)
     },
   });
 

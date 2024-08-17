@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/contexts/ProgressBarProvider";
 import { ToastContainer } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
+import { AdminContextProvider } from "@/contexts/AdminContext";
 
 export const metadata: Metadata = {
   title: "Nana Motors",
@@ -20,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <AdminContextProvider>{children}</AdminContextProvider>
+        </Providers>
         <ToastContainer />
       </body>
     </html>
