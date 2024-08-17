@@ -8,7 +8,7 @@
 
     .container {
         width: 210mm;
-        min-height: 297mm;
+        min-height: fit-content;
         padding: 0.5in;
         font-family: "Inter", sans-serif;
         font-size: 12px;

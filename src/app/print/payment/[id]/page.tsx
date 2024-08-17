@@ -58,9 +58,9 @@ async function page({ params }: { params: { id: string } }) {
 
   return (
     <table className="container">
-      <thead>
+      <thead >
         <tr>
-          <td>
+          <td className="p-5 print:p-0">
             <Header />
             <div className="header flex gap-5 justify-between items-center mb-8">
               <div className="">
@@ -114,7 +114,7 @@ async function page({ params }: { params: { id: string } }) {
       </thead>
       <tbody>
         <tr>
-          <td>
+          <td className="p-5 print:p-0">
             <section>
               <div className="grid gap-5 mb-5">
                 {/* customer Information */}
@@ -170,6 +170,20 @@ async function page({ params }: { params: { id: string } }) {
           </td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <td className="p-5 print:p-0">
+            <div className="flex justify-between items-center mt-10">
+              <div className="border-t  w-[10rem] text-center">
+                <p>Manager Signature</p>
+              </div>
+              <div className="border-t  w-[10rem] text-center">
+                <p>Customer Signature</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   );
 }
