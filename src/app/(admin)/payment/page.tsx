@@ -78,6 +78,7 @@ const DataTable = async ({
     [data, count] = await Promise.all([
       db.payment.findMany({
         include: { vehicle: true, customer: true },
+        orderBy: {createdAt: 'desc'},
         where: {
           vehicle: {
             status:
@@ -95,7 +96,7 @@ const DataTable = async ({
             },
             {
               customer: {
-                name: { startsWith: searchParams.q },
+                name: { contains: searchParams.q },
               },
             },
             {
@@ -126,7 +127,7 @@ const DataTable = async ({
             },
             {
               customer: {
-                name: { startsWith: searchParams.q },
+                name: { contains: searchParams.q },
               },
             },
             {
@@ -142,6 +143,7 @@ const DataTable = async ({
     [data, count] = await Promise.all([
       db.payment.findMany({
         include: { vehicle: true, customer: true },
+        orderBy: {createdAt: 'desc'},
         where: {
           OR: [
             {
@@ -151,7 +153,7 @@ const DataTable = async ({
             },
             {
               customer: {
-                name: { startsWith: searchParams.q },
+                name: { contains: searchParams.q },
               },
             },
             {
@@ -174,7 +176,7 @@ const DataTable = async ({
             },
             {
               customer: {
-                name: { startsWith: searchParams.q },
+                name: { contains: searchParams.q },
               },
             },
             {
@@ -190,6 +192,7 @@ const DataTable = async ({
     [data, count] = await Promise.all([
       db.payment.findMany({
         include: { vehicle: true, customer: true },
+        orderBy: {createdAt: 'desc'},
         where: {
           vehicle: {
             status:
@@ -220,6 +223,7 @@ const DataTable = async ({
     [data, count] = await Promise.all([
       db.payment.findMany({
         include: {customer: true, vehicle: true},
+        orderBy: {createdAt: 'desc'},
         skip: (Number(searchParams.p || 1) - 1) * limit,
         take: limit,
       }),

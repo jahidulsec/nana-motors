@@ -12,7 +12,14 @@ import {
 } from "@/components/ui/table";
 
 import { formatCurrency, formatDate } from "@/lib/formatter";
-import { CreditCard, Edit, MessageSquareOff, ShoppingCart, Trash } from "lucide-react";
+import {
+  CreditCard,
+  Edit,
+  MessageSquareOff,
+  Printer,
+  ShoppingCart,
+  Trash,
+} from "lucide-react";
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
@@ -65,14 +72,16 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
                 <TableCell className="w-[150px]">
                   {item.vehicle.engineNo}
                 </TableCell>
-                <TableCell>{formatDate(item.emiDate || item.createdAt)}</TableCell>
+                <TableCell>
+                  {formatDate(item.emiDate || item.createdAt)}
+                </TableCell>
                 <TableCell>{formatCurrency(item.sellingPrice)}</TableCell>
                 <TableCell>{item.customer.name}</TableCell>
                 <TableCell>{item.customer.mobile}</TableCell>
                 <TableCell align="center">
                   <PaymentType tagName={item.vehicleType as string} />
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" className="min-w-[7rem]">
                   <VehicleTag tagName={item.vehicle.status as string} />
                 </TableCell>
                 <TableCell className="flex gap-1 justify-end">
@@ -89,6 +98,19 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
                       </Link>
                     </Tooltips>
                   )}
+
+                  <Tooltips title="Invoice">
+                    <Button
+                      asChild
+                      size={"icon"}
+                      variant={"outline"}
+                      className="rounded-full size-8"
+                    >
+                      <Link href={`/print/invoice/${item.id}`}>
+                        <Printer className="size-4" />
+                      </Link>
+                    </Button>
+                  </Tooltips>
 
                   <Tooltips title="Edit">
                     <Button
@@ -127,8 +149,6 @@ const PaymentTable = ({ payments }: { payments: Payments[] }) => {
           )}
         </TableBody>
       </Table>
-
-
 
       {/* alert delete vehicle modal */}
       <AlertDialog open={!!delPayment} onOpenChange={setDelPayment}>

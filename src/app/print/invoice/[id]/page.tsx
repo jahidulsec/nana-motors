@@ -138,10 +138,10 @@ async function InvoicePage({ params }: { params: { id: string } }) {
           <td>
             <div className="mt-10">
               <div className="flex justify-between items-center mt-20">
-                <div className="border-t pt-2 w-[10rem] text-center">
+                <div className="border-t border-gray-700 pt-2 w-[10rem] text-center">
                   <p>Manager Signature</p>
                 </div>
-                <div className="border-t pt-2 w-[10rem] text-center">
+                <div className="border-t border-gray-700 pt-2 w-[10rem] text-center">
                   <p>Customer Signature</p>
                 </div>
               </div>
