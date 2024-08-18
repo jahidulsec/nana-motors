@@ -58,8 +58,8 @@ Make sure you have the following installed on your machine:
 **Cloning the Repository**
 
 ```bash
-git clone https://github.com/jahidulsec/BrainWave.git
-cd brainwave
+git clone https://github.com/jahidulsec/nana-motors.git
+cd nana-motors
 ```
 
 **Installation**
@@ -79,3 +79,9 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
+
+## <a name="live-preview">Live Preview</a>
+For live preview, go to [nana-motors.vercel.app](https://nana-motors.vercel.app)
+For Authentication: 
+```username: admin
+password: 123456```
