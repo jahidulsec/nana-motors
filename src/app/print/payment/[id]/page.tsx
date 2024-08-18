@@ -67,7 +67,7 @@ async function page({ params }: { params: { id: string } }) {
                 <h2 className="text-2xl font-semibold text-primary mb-2">
                   Payment Information
                 </h2>
-                <h5 className="font-light text-gray-500 uppercase">
+                <h5 className="font-light text-gray-700 uppercase">
                   # {paymentDetails?.invoiceNo}
                 </h5>
               </div>
@@ -78,7 +78,7 @@ async function page({ params }: { params: { id: string } }) {
                   <h4 className="text-[14px] font-semibold text-primary">
                     {formatCurrency(paymentDetails?.sellingPrice as number)}
                   </h4>
-                  <p className="text-gray-400 text-[12px]">Selling Price</p>
+                  <p className="text-gray-600 text-[12px]">Selling Price</p>
                 </article>
 
                 <div className="bg-gray-400 h-[2.5rem] w-[1px]"></div>
@@ -87,7 +87,7 @@ async function page({ params }: { params: { id: string } }) {
                   <h4 className="text-[14px] font-semibold text-primary">
                     {formatCurrency(interestAmount * noOfMonthDue)}
                   </h4>
-                  <p className="text-gray-400 text-[12px]">Interest</p>
+                  <p className="text-gray-600 text-[12px]">Interest</p>
                 </article>
 
                 <div className="bg-gray-400 h-[2.5rem] w-[1px]"></div>
@@ -96,7 +96,7 @@ async function page({ params }: { params: { id: string } }) {
                   <h4 className="text-[14px] font-semibold text-primary">
                     {formatCurrency(totalPaidAmount)}
                   </h4>
-                  <p className="text-gray-400 text-[12px]">Paid Amount</p>
+                  <p className="text-gray-600 text-[12px]">Paid Amount</p>
                 </article>
 
                 <div className="bg-gray-400 h-[2.5rem] w-[1px]"></div>
@@ -105,7 +105,7 @@ async function page({ params }: { params: { id: string } }) {
                   <h4 className="text-[14px] font-semibold text-primary">
                     {formatCurrency(totalDue)}
                   </h4>
-                  <p className="text-gray-400 text-[12px]">Due Amount</p>
+                  <p className="text-gray-600 text-[12px]">Due Amount</p>
                 </article>
               </div>
             </div>
@@ -144,7 +144,7 @@ async function page({ params }: { params: { id: string } }) {
                         tagName={paymentDetails?.vehicleType as string}
                       />
                     </h4>
-                    <p className="text-gray-400 text-[12px]">Payment Type</p>
+                    <p className="text-gray-600 text-[12px]">Payment Type</p>
                   </article>
 
                   <div className="bg-gray-400 h-[2.5rem] w-[1px]"></div>
@@ -155,7 +155,7 @@ async function page({ params }: { params: { id: string } }) {
                         tagName={paymentDetails?.vehicle.status as string}
                       />
                     </h4>
-                    <p className="text-gray-400 text-[12px]">Status</p>
+                    <p className="text-gray-600 text-[12px]">Status</p>
                   </article>
                 </div>
               </div>
@@ -174,10 +174,10 @@ async function page({ params }: { params: { id: string } }) {
         <tr>
           <td className="p-5 print:p-0">
             <div className="flex justify-between items-center mt-10">
-              <div className="border-t  w-[10rem] text-center">
+              <div className="border-t border-gray-700 pt-0.5 w-[10rem] text-center">
                 <p>Manager Signature</p>
               </div>
-              <div className="border-t  w-[10rem] text-center">
+              <div className="border-t border-gray-700 pt-0.5 w-[10rem] text-center">
                 <p>Customer Signature</p>
               </div>
             </div>
