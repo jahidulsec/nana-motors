@@ -83,5 +83,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 ## <a name="live-preview">Live Preview</a>
 For live preview, go to [nana-motors.vercel.app](https://nana-motors.vercel.app)
 For Authentication: 
-```username: admin
-password: 123456```
+```
+username: admin
+password: 123456
+```
