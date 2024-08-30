@@ -2,7 +2,6 @@ import { BadgeDollarSign, Car } from "lucide-react";
 import Card from "./_components/Card";
 import db from "../../../db/db";
 import DashboardHeader from "./_components/DashboardHeader";
-import { cookies } from "next/headers";
 
 const DashboardHome = async () => {
   const [availableCount, inProgressCount, inEmiCount, soldCount] =

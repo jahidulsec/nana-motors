@@ -6,6 +6,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import db from "../../../../db/db";
 import { isValidPassword } from "@/lib/isValidPassword";
+import { createSession } from "@/lib/session";
 
 const authSchema = z.object({
   username: z.string().min(1, { message: "Enter admin username" }),
@@ -34,21 +35,14 @@ export const adminLogin = async (prevData: unknown, formData: FormData) => {
   }
 
   if (await isValidPassword(data.password as string, user.password as string)) {
-    const expiresAt = new Date(Date.now() + 1 * 6 * 60 * 60 * 1000);
 
+    await createSession(user.id.toString())
 
-    cookies().set("ad", JSON.stringify({name: user.fullName, uid: user.id}), {
-      httpOnly: true,
-      secure: false,
-      expires: expiresAt,
-      sameSite: 'strict',
-      path: "/",
-    });
     return redirect("/");
   }
   return { error: null, success: null, db: "Invalid password" };
 };
 
 export const adminLogout = async () => {
-  cookies().delete("ad");
+  cookies().delete("session");
 };
