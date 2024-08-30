@@ -82,8 +82,8 @@ export default function SideNav() {
             onClick={() => {
               startTransition(async () => {
                 await adminLogout();
-                router.refresh()
                 toast.success("You are logged out");
+                router.replace('/login')
               });
             }}
           />
