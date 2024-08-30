@@ -72,6 +72,13 @@ npx prisma generate
 npx prisma migrate dev --name init
 ```
 
+For authentication purpose, generate secrete key and save it to `.env` as `SECRETE_KEY`.
+
+```bash
+openssl rand -base64 32
+```
+
+
 **Running the Project**
 
 ```bash
