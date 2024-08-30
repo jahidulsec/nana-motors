@@ -18,13 +18,9 @@
 4. [Quick Start](#quick-start)
 5. [Snippets](#snippets)
 
-
-
 ## <a name="introduction">Introduction</a>
 
 Nana Motors - Modern E-Commerce Finance website, developed using React.js, Next.js , Prisma and Tailwind CSS, exemplifies modern UI/UX principles with modern full stack features. Its sleek design, seamless animations, and overall user experience set a high standard, serving as a reference or inspiration for future modern applications or websites in general.
-
-
 
 ## <a name="tech-stack">Tech Stack</a>
 
@@ -33,7 +29,6 @@ Nana Motors - Modern E-Commerce Finance website, developed using React.js, Next.
 - Prisma
 - Tailwind CSS
 
-
 ## <a name="features">Features</a>
 
 **Authentication**: Includes session-based authentication with cookies.
@@ -41,7 +36,6 @@ Nana Motors - Modern E-Commerce Finance website, developed using React.js, Next.
 **Functionalities**: Includes purchase a vehicle from client, or company; sell a vehicle to customer with EMI or Full Payment option. Fully functional EMI payment system is also included. Generate vehicle sell invoice and EMI statement invoice for customer.
 
 and many more, including code architecture and reusability
-
 
 ## <a name="quick-start">Quick Start</a>
 
@@ -78,6 +72,11 @@ For authentication purpose, generate secrete key and save it to `.env` as `SECRE
 openssl rand -base64 32
 ```
 
+For database setup (Sqlite), add `DATABASE_URL` in `.env` file.
+
+```
+DATABASE_URL="file:./dev.db"
+```
 
 **Running the Project**
 
@@ -88,8 +87,10 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
 ## <a name="live-preview">Live Preview</a>
+
 For live preview, go to [nana-motors.vercel.app](https://nana-motors.vercel.app)
-For Authentication: 
+For Authentication:
+
 ```
 username: admin
 password: 123456
