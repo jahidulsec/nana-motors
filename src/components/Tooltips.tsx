@@ -5,7 +5,7 @@ const Tooltips = ({title, children}: {title: string, children: React.ReactNode})
   return (
     <>
       <TooltipProvider>
-        <Tooltip>
+        <Tooltip delayDuration={300}>
           <TooltipTrigger asChild>
             {children}
           </TooltipTrigger>
