@@ -84,6 +84,7 @@ const DataTable = async ({
         },
         skip: (Number(searchParams.p || 1) - 1) * limit,
         take: limit,
+        orderBy: {createdAt: 'desc'}
       }),
       db.vehicle.count({
         where: {
@@ -105,6 +106,7 @@ const DataTable = async ({
         },
         skip: (Number(searchParams.p || 1) - 1) * limit,
         take: limit,
+        orderBy: {createdAt: 'desc'}
       }),
       db.vehicle.count({
         where: {
@@ -125,6 +127,7 @@ const DataTable = async ({
         },
         skip: (Number(searchParams.p || 1) - 1) * limit,
         take: limit,
+        orderBy: {createdAt: 'desc'}
       }),
       db.vehicle.count({
         where: {
@@ -142,6 +145,7 @@ const DataTable = async ({
       db.vehicle.findMany({
         skip: (Number(searchParams.p || 1) - 1) * limit,
         take: limit,
+        orderBy: {createdAt: 'desc'}
       }),
       db.vehicle.count(),
     ]);
