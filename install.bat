@@ -1,0 +1,1 @@
+npm i && npx prisma generate && npm run build && npx prisma migrate dev --name init 

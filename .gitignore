@@ -38,8 +38,8 @@ next-env.d.ts
 
 #db
 /prisma/migrations
-/prisma/dev.db
+# /prisma/dev.db
 /prisma/dev.db-journal
 
 
-*.bat
+# *.bat
